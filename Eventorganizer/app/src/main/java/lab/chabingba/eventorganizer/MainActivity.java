@@ -6,30 +6,41 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import lab.chabingba.eventorganizer.Database.Category;
-import lab.chabingba.eventorganizer.Database.MyEvent;
-import lab.chabingba.eventorganizer.Helpers.FileHelpers;
+import lab.chabingba.eventorganizer.Database.DBHandler;
+import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
+import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
 
 
 public class MainActivity extends Activity {
-    ArrayList<Category> listOfCategories;
-    File categoriesInput;
+    private ArrayList<Category> listOfCategories;
+    private DBHandler database;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listOfCategories = new ArrayList<Category>();
+        GeneralHelpers.FirstAppRun(this);
 
-        listOfCategories = FileHelpers.ReadCategoriesFromFile(categoriesInput);
+        int currentDatabaseVersion = GeneralHelpers.GetCurrentDatabaseVersion(this);
+
+        database = new DBHandler(this, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+
+        listOfCategories = database.CreateListWithCategoriesFromTable(DatabaseConstants.CATEGORIES_TABLE_NAME);
+
+        TextView tvTest = (TextView) findViewById(R.id.tvTest);
+
+        tvTest.setText("");
+
+        for (int i = 0; i < listOfCategories.size(); i++) {
+            tvTest.append(listOfCategories.get(i).getName());
+        }
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

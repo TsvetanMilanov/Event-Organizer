@@ -1,10 +1,13 @@
 package lab.chabingba.eventorganizer.Database;
 
+import android.util.Log;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import lab.chabingba.eventorganizer.Helpers.Constants;
-import lab.chabingba.eventorganizer.Helpers.Validators;
+import lab.chabingba.eventorganizer.Helpers.Constants.GeneralConstants;
+import lab.chabingba.eventorganizer.Helpers.ValidatorHelpers;
 
 /**
  * Created by Tsvetan on 2015-05-25.
@@ -20,20 +23,17 @@ public class MyEvent {
     private boolean isOld;
 
     public MyEvent() {
-        this.setDate(Calendar.getInstance());
-        this.setIsFinished(true);
-        this.setHasNotification(true);
-        this.setIsOld(true);
     }
 
-    public MyEvent(int inputId, String inputType, Calendar inputDate, String inputLocation, String inputDescription) {
-        this();
-
-        this.setId(inputId);
+    public MyEvent(String inputType, String inputDate, String inputLocation,
+                   String inputDescription, boolean inputIsFinished, boolean inputHasNotification, boolean inputIsOld) {
         this.setType(inputType);
         this.setDate(inputDate);
         this.setLocation(inputLocation);
         this.setDescription(inputDescription);
+        this.setIsFinished(inputIsFinished);
+        this.setHasNotification(inputHasNotification);
+        this.setIsOld(inputIsOld);
     }
 
     public int getId() {
@@ -45,7 +45,7 @@ public class MyEvent {
     }
 
     public String getType() {
-        return Validators.isNullOrEmpty(this.type);
+        return ValidatorHelpers.isNullOrEmpty(this.type);
     }
 
     public void setType(String type) {
@@ -60,12 +60,31 @@ public class MyEvent {
         return this.date;
     }
 
+    public String getDateAsStringWithDefaultFormat() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GeneralConstants.DATE_DEFAULT_FORMAT);
+
+        String result = simpleDateFormat.format(this.date.getTime());
+
+        return result;
+    }
+
     public void setDate(Calendar date) {
         this.date = date;
     }
 
+    public void setDate(String date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GeneralConstants.DATE_DEFAULT_FORMAT);
+
+        try {
+            this.date.setTime(simpleDateFormat.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.e("Date parse in setter.", e.getMessage());
+        }
+    }
+
     public String getLocation() {
-        return Validators.isNullOrEmpty(this.location);
+        return ValidatorHelpers.isNullOrEmpty(this.location);
     }
 
     public void setLocation(String location) {
@@ -73,7 +92,7 @@ public class MyEvent {
     }
 
     public String getDescription() {
-        return Validators.isNullOrEmpty(this.description);
+        return ValidatorHelpers.isNullOrEmpty(this.description);
     }
 
     public void setDescription(String description) {
@@ -109,7 +128,7 @@ public class MyEvent {
 
         Calendar date = this.getDate();
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.DATE_FORMATTER);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GeneralConstants.DATE_FORMATTER);
 
         result += simpleDateFormat.format(date.getTime());
 
@@ -121,7 +140,7 @@ public class MyEvent {
 
         Calendar date = this.getDate();
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_DAY_OF_WEEK);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GeneralConstants.DATE_FORMATTER_DAY_OF_WEEK);
 
         result += simpleDateFormat.format(date.getTime());
 
@@ -133,7 +152,7 @@ public class MyEvent {
 
         Calendar date = this.getDate();
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_HOUR);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GeneralConstants.DATE_FORMATTER_HOUR);
 
         result += simpleDateFormat.format(date.getTime());
 

@@ -1,5 +1,7 @@
 package lab.chabingba.eventorganizer.Database;
 
+import lab.chabingba.eventorganizer.Helpers.ValidatorHelpers;
+
 /**
  * Created by Tsvetan on 2015-05-25.
  */
@@ -28,6 +30,6 @@ public class Category {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = ValidatorHelpers.isNullOrEmpty(name);
     }
 }
