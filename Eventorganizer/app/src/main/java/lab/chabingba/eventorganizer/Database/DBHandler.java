@@ -39,9 +39,11 @@ public class DBHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String queryForCategoryTable = QueryHelpers.CreateQueryForCategoryTable(DatabaseConstants.CATEGORIES_TABLE_NAME);
+        Log.i("QUERY", queryForCategoryTable);
+
         db.execSQL(queryForCategoryTable);
 
-        AddNewTable(db, DatabaseConstants.DEFAULT_EVENT_TABLE_NAME);
+        AddCategory(db, DatabaseConstants.DEFAULT_EVENT_TABLE_NAME);
 
         Log.i("CREATE", "ONCREATE completed.");
     }
@@ -62,8 +64,20 @@ public class DBHandler extends SQLiteOpenHelper {
         return result;
     }
 
-    public void AddNewTable(SQLiteDatabase database, String tableName) {
+    public void AddNewCategoryTable(SQLiteDatabase database, String tableName) {
         String query = QueryHelpers.CreateQueryForCategoryTable(tableName);
+
+        Log.i("QUERY", query);
+
+        database.execSQL(query);
+
+        Log.i("TABLE", "Added new Table.");
+    }
+
+    public void AddNewEventTable(SQLiteDatabase database, String tableName) {
+        String query = QueryHelpers.CreateQueryForEventTable(tableName);
+
+        Log.i("QUERY", query);
 
         database.execSQL(query);
 
@@ -78,24 +92,22 @@ public class DBHandler extends SQLiteOpenHelper {
         database.execSQL(query);
     }
 
-    public void AddCategory(Category category) {
+    public void AddCategory(SQLiteDatabase database, Category category) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseConstants.CATEGORY_FIELD_NAME, category.getName());
 
-        SQLiteDatabase database = getWritableDatabase();
         database.insert(QueryHelpers.ConvertTableNameToSQLConvention(DatabaseConstants.CATEGORIES_TABLE_NAME), null, contentValues);
 
-        AddNewTable(database, category.getName());
+        AddNewEventTable(database, category.getName());
     }
 
-    public void AddCategory(String category) {
+    public void AddCategory(SQLiteDatabase database, String category) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseConstants.CATEGORY_FIELD_NAME, category);
 
-        SQLiteDatabase database = getWritableDatabase();
         database.insert(QueryHelpers.ConvertTableNameToSQLConvention(DatabaseConstants.CATEGORIES_TABLE_NAME), null, contentValues);
 
-        AddNewTable(database, category);
+        AddNewEventTable(database, category);
     }
 
     public void RemoveCategory(String categoryName) {
@@ -161,7 +173,10 @@ public class DBHandler extends SQLiteOpenHelper {
     public ArrayList<Category> CreateListWithCategoriesFromTable(String tableName) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
+        //LogAllTableNames(sqLiteDatabase);
+
         String query = QueryHelpers.CreateQueryForSelectingWholeTable(tableName);
+        Log.i("QUERY", query);
 
         Cursor cursor = sqLiteDatabase.rawQuery(query, null);
 
@@ -177,9 +192,26 @@ public class DBHandler extends SQLiteOpenHelper {
             cursor.moveToNext();
         }
 
+        cursor.close();
         sqLiteDatabase.close();
 
         return result;
+    }
+
+    private void LogAllTableNames(SQLiteDatabase sqLiteDatabase) {
+        ArrayList<String> arrTblNames = new ArrayList<String>();
+        Cursor c = sqLiteDatabase.rawQuery(DatabaseConstants.SELECT_ALL_TABLES_QUERY, null);
+
+        if (c.moveToFirst()) {
+            while (!c.isAfterLast()) {
+                arrTblNames.add(c.getString(c.getColumnIndex("name")));
+                c.moveToNext();
+            }
+        }
+
+        for (int i = 0; i < arrTblNames.size(); i++) {
+            Log.i("TABLE_NAME: ", arrTblNames.get(i));
+        }
     }
 
     private Category ParseCategoryFromCursor(Cursor cursor) {

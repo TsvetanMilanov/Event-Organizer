@@ -69,8 +69,7 @@ public final class QueryHelpers {
         result += DatabaseConstants.SELECT +
                 "*" +
                 DatabaseConstants.FROM +
-                ConvertTableNameToSQLConvention(tableName) +
-                DatabaseConstants.WHERE + "1;";
+                ConvertTableNameToSQLConvention(tableName) + ";";
 
         return result;
     }

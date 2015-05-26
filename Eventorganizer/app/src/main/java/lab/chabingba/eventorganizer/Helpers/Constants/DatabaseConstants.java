@@ -45,4 +45,5 @@ public final class DatabaseConstants {
     public static final String WHERE = " WHERE ";
     public static final String SELECT = "SELECT ";
     public static final String FROM = " FROM ";
+    public static final String SELECT_ALL_TABLES_QUERY = "SELECT name FROM sqlite_master WHERE type='table'";
 }
