@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:id="@+id/imageView"
+        android:layout_margin="5dp"
+        android:src="@drawable/icon" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Event type"
+        android:id="@+id/tvMenuItemType"
+        android:layout_toRightOf="@+id/imageView"
+        android:layout_toEndOf="@+id/imageView"
+        android:textIsSelectable="false"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Event date"
+        android:id="@+id/tvMenuItemDate"
+        android:layout_below="@+id/tvMenuItemType"
+        android:layout_alignLeft="@+id/tvMenuItemType"
+        android:layout_alignStart="@+id/tvMenuItemType"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Event day"
+        android:id="@+id/tvMenuItemDay"
+        android:layout_alignTop="@+id/tvMenuItemDate"
+        android:layout_toRightOf="@+id/tvMenuItemDate"
+        android:layout_toEndOf="@+id/tvMenuItemDate"
+        android:layout_marginLeft="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Event hour"
+        android:id="@+id/tvMenuItemHour"
+        android:layout_alignBottom="@+id/tvMenuItemType"
+        android:layout_alignLeft="@+id/tvMenuItemDay"
+        android:layout_alignStart="@+id/tvMenuItemDay"
+        android:layout_marginLeft="20dp" />
+</RelativeLayout>

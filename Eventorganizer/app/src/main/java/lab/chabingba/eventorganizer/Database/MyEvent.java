@@ -2,6 +2,7 @@ package lab.chabingba.eventorganizer.Database;
 
 import android.util.Log;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,7 +13,7 @@ import lab.chabingba.eventorganizer.Helpers.ValidatorHelpers;
 /**
  * Created by Tsvetan on 2015-05-25.
  */
-public class MyEvent {
+public class MyEvent implements Serializable {
     private int id;
     private String type;
     private Calendar date;
