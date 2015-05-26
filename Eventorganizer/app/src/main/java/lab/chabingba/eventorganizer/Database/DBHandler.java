@@ -21,29 +21,20 @@ import lab.chabingba.eventorganizer.Helpers.QueryHelpers;
 //DON'T forget to convert the table names except when passing to methods!!!
 
 public class DBHandler extends SQLiteOpenHelper {
-    private Context receivedContext;
-
-    private static int DATABASE_VERSION;
-    private static String DATABASE_NAME;
 
     public DBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
-
-        this.receivedContext = context;
-        DATABASE_VERSION = version;
-        DATABASE_NAME = DatabaseConstants.DATABASE_NAME;
-
         Log.i("CTR", "Constructor passed.");
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String queryForCategoryTable = QueryHelpers.CreateQueryForCategoryTable(DatabaseConstants.CATEGORIES_TABLE_NAME);
+        String queryForCategoryTable = QueryHelpers.createQueryForCategoryTable(DatabaseConstants.CATEGORIES_TABLE_NAME);
         Log.i("QUERY", queryForCategoryTable);
 
         db.execSQL(queryForCategoryTable);
 
-        AddCategory(db, DatabaseConstants.DEFAULT_EVENT_TABLE_NAME);
+        addCategory(db, DatabaseConstants.DEFAULT_EVENT_TABLE_NAME);
 
         Log.i("CREATE", "ONCREATE completed.");
     }
@@ -55,7 +46,7 @@ public class DBHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    private int UpdateDatabaseVersion(Context context) {
+    private int updateDatabaseVersion(Context context) {
         SharedPreferences settings = context.getSharedPreferences(GeneralConstants.PREFS_NAME, Context.MODE_PRIVATE);
         int currentDatabaseVersion = settings.getInt(DatabaseConstants.DATABASE_VERSION_VARIABLE, DatabaseConstants.DATABASE_DEFAULT_VERSION);
 
@@ -64,8 +55,8 @@ public class DBHandler extends SQLiteOpenHelper {
         return result;
     }
 
-    public void AddNewCategoryTable(SQLiteDatabase database, String tableName) {
-        String query = QueryHelpers.CreateQueryForCategoryTable(tableName);
+    private void addNewCategoryTable(SQLiteDatabase database, String tableName) {
+        String query = QueryHelpers.createQueryForCategoryTable(tableName);
 
         Log.i("QUERY", query);
 
@@ -74,8 +65,8 @@ public class DBHandler extends SQLiteOpenHelper {
         Log.i("TABLE", "Added new Table.");
     }
 
-    public void AddNewEventTable(SQLiteDatabase database, String tableName) {
-        String query = QueryHelpers.CreateQueryForEventTable(tableName);
+    private void addNewEventTable(SQLiteDatabase database, String tableName) {
+        String query = QueryHelpers.createQueryForEventTable(tableName);
 
         Log.i("QUERY", query);
 
@@ -84,43 +75,65 @@ public class DBHandler extends SQLiteOpenHelper {
         Log.i("TABLE", "Added new Table.");
     }
 
-    public void RemoveTable(String tableName) {
+    private void removeTable(SQLiteDatabase database, String tableName) {
+        String query = QueryHelpers.createQueryForDeletingTable(tableName);
+
+        database.execSQL(query);
+    }
+
+    public void removeTable(String tableName) {
         SQLiteDatabase database = getWritableDatabase();
 
-        String query = QueryHelpers.CreateQueryForDeletingTable(tableName);
+        String query = QueryHelpers.createQueryForDeletingTable(tableName);
 
         database.execSQL(query);
+
+        database.close();
     }
 
-    public void AddCategory(SQLiteDatabase database, Category category) {
+    private void addCategory(SQLiteDatabase database, Category category) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseConstants.CATEGORY_FIELD_NAME, category.getName());
 
-        database.insert(QueryHelpers.ConvertTableNameToSQLConvention(DatabaseConstants.CATEGORIES_TABLE_NAME), null, contentValues);
+        database.insert(QueryHelpers.convertTableNameToSQLConvention(DatabaseConstants.CATEGORIES_TABLE_NAME), null, contentValues);
 
-        AddNewEventTable(database, category.getName());
+        addNewEventTable(database, category.getName());
     }
 
-    public void AddCategory(SQLiteDatabase database, String category) {
+    private void addCategory(SQLiteDatabase database, String category) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseConstants.CATEGORY_FIELD_NAME, category);
 
-        database.insert(QueryHelpers.ConvertTableNameToSQLConvention(DatabaseConstants.CATEGORIES_TABLE_NAME), null, contentValues);
+        database.insert(QueryHelpers.convertTableNameToSQLConvention(DatabaseConstants.CATEGORIES_TABLE_NAME), null, contentValues);
 
-        AddNewEventTable(database, category);
+        addNewEventTable(database, category);
     }
 
-    public void RemoveCategory(String categoryName) {
+    public void addCategory(String category) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseConstants.CATEGORY_FIELD_NAME, category);
+
         SQLiteDatabase database = getWritableDatabase();
 
-        String query = QueryHelpers.CreateQueryForDeletingRow(DatabaseConstants.CATEGORIES_TABLE_NAME, DatabaseConstants.CATEGORY_FIELD_NAME, categoryName);
+        database.insert(QueryHelpers.convertTableNameToSQLConvention(DatabaseConstants.CATEGORIES_TABLE_NAME), null, contentValues);
+
+        addNewEventTable(database, category);
+
+        database.close();
+    }
+
+    public void removeCategory(String categoryName) {
+        SQLiteDatabase database = getWritableDatabase();
+
+        String query = QueryHelpers.createQueryForDeletingRow(DatabaseConstants.CATEGORIES_TABLE_NAME, DatabaseConstants.CATEGORY_FIELD_NAME, categoryName);
 
         database.execSQL(query);
 
-        RemoveTable(categoryName);
+        removeTable(categoryName);
+        database.close();
     }
 
-    public void AddEvent(MyEvent event, String tableName) {
+    public void addEvent(MyEvent event, String tableName) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseConstants.EVENT_FIELD_TYPE, event.getType());
         contentValues.put(DatabaseConstants.EVENT_FIELD_DATE, event.getDateAsStringWithDefaultFormat());
@@ -131,25 +144,25 @@ public class DBHandler extends SQLiteOpenHelper {
         contentValues.put(DatabaseConstants.EVENT_FIELD_IS_OLD, event.getIsOld());
 
         SQLiteDatabase database = getWritableDatabase();
-        database.insert(QueryHelpers.ConvertTableNameToSQLConvention(tableName), null, contentValues);
+        database.insert(QueryHelpers.convertTableNameToSQLConvention(tableName), null, contentValues);
 
         database.close();
     }
 
-    public void RemoveEvent(String table, int id) {
+    public void removeEvent(String table, int id) {
         SQLiteDatabase database = getWritableDatabase();
 
-        String query = QueryHelpers.CreateQueryForDeletingRow(table, DatabaseConstants.EVENT_FIELD_ID, id);
+        String query = QueryHelpers.createQueryForDeletingRow(table, DatabaseConstants.EVENT_FIELD_ID, id);
 
         database.execSQL(query);
 
         database.close();
     }
 
-    public ArrayList<MyEvent> CreateListWithEventsFromTable(String tableName) {
+    public ArrayList<MyEvent> createListWithEventsFromTable(String tableName) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
-        String query = QueryHelpers.CreateQueryForSelectingWholeTable(tableName);
+        String query = QueryHelpers.createQueryForSelectingWholeTable(tableName);
 
         Cursor cursor = sqLiteDatabase.rawQuery(query, null);
 
@@ -158,24 +171,25 @@ public class DBHandler extends SQLiteOpenHelper {
         ArrayList<MyEvent> result = new ArrayList<>();
 
         while (!cursor.isAfterLast()) {
-            MyEvent eventToAdd = ParseEventFromCursor(cursor);
+            MyEvent eventToAdd = parseEventFromCursor(cursor);
 
             result.add(eventToAdd);
 
             cursor.moveToNext();
         }
 
+        cursor.close();
         sqLiteDatabase.close();
 
         return result;
     }
 
-    public ArrayList<Category> CreateListWithCategoriesFromTable(String tableName) {
+    public ArrayList<Category> createListWithCategoriesFromTable(String tableName) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
-        //LogAllTableNames(sqLiteDatabase);
+        //logAllTableNames(sqLiteDatabase);
 
-        String query = QueryHelpers.CreateQueryForSelectingWholeTable(tableName);
+        String query = QueryHelpers.createQueryForSelectingWholeTable(tableName);
         Log.i("QUERY", query);
 
         Cursor cursor = sqLiteDatabase.rawQuery(query, null);
@@ -185,7 +199,7 @@ public class DBHandler extends SQLiteOpenHelper {
         ArrayList<Category> result = new ArrayList<>();
 
         while (!cursor.isAfterLast()) {
-            Category categoryToAdd = ParseCategoryFromCursor(cursor);
+            Category categoryToAdd = parseCategoryFromCursor(cursor);
 
             result.add(categoryToAdd);
 
@@ -198,7 +212,7 @@ public class DBHandler extends SQLiteOpenHelper {
         return result;
     }
 
-    private void LogAllTableNames(SQLiteDatabase sqLiteDatabase) {
+    private void logAllTableNames(SQLiteDatabase sqLiteDatabase) {
         ArrayList<String> arrTblNames = new ArrayList<String>();
         Cursor c = sqLiteDatabase.rawQuery(DatabaseConstants.SELECT_ALL_TABLES_QUERY, null);
 
@@ -214,7 +228,26 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
-    private Category ParseCategoryFromCursor(Cursor cursor) {
+    public void logAllTableNames() {
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        ArrayList<String> arrTblNames = new ArrayList<String>();
+        Cursor c = sqLiteDatabase.rawQuery(DatabaseConstants.SELECT_ALL_TABLES_QUERY, null);
+
+        if (c.moveToFirst()) {
+            while (!c.isAfterLast()) {
+                arrTblNames.add(c.getString(c.getColumnIndex("name")));
+                c.moveToNext();
+            }
+        }
+
+        for (int i = 0; i < arrTblNames.size(); i++) {
+            Log.i("TABLE_NAME: ", arrTblNames.get(i));
+        }
+
+        sqLiteDatabase.close();
+    }
+
+    private Category parseCategoryFromCursor(Cursor cursor) {
         int id = cursor.getInt(cursor.getColumnIndex(DatabaseConstants.CATEGORY_FIELD_ID));
         String name = cursor.getString(cursor.getColumnIndex(DatabaseConstants.CATEGORY_FIELD_NAME));
 
@@ -231,7 +264,7 @@ public class DBHandler extends SQLiteOpenHelper {
         return categoryToAdd;
     }
 
-    private MyEvent ParseEventFromCursor(Cursor cursor) {
+    private MyEvent parseEventFromCursor(Cursor cursor) {
         int id = cursor.getInt(cursor.getColumnIndex(DatabaseConstants.EVENT_FIELD_ID));
         String type = cursor.getString(cursor.getColumnIndex(DatabaseConstants.EVENT_FIELD_TYPE));
         String date = cursor.getString(cursor.getColumnIndex(DatabaseConstants.EVENT_FIELD_DATE));

@@ -10,66 +10,66 @@ import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 
 public final class QueryHelpers {
 
-    public static String CreateQueryForEventTable(String tableName) {
+    public static String createQueryForEventTable(String tableName) {
         String result = DatabaseConstants.CREATE_TABLE_QUERY_START +
-                ConvertTableNameToSQLConvention(tableName) +
+                convertTableNameToSQLConvention(tableName) +
                 DatabaseConstants.CREATE_EVENT_TABLE_QUERY_END;
 
         return result;
     }
 
-    public static String ConvertTableNameToSQLConvention(String name) {
+    public static String convertTableNameToSQLConvention(String name) {
         String result = name.trim();
         result = result.replace(' ', '_');
 
         return result;
     }
 
-    public static String CreateQueryForCategoryTable(String name) {
+    public static String createQueryForCategoryTable(String name) {
         String result = DatabaseConstants.CREATE_TABLE_QUERY_START +
-                ConvertTableNameToSQLConvention(name) +
+                convertTableNameToSQLConvention(name) +
                 DatabaseConstants.CREATE_CATEGORY_TABLE_QUERY_END;
 
         return result;
     }
 
-    public static String CreateQueryForDeletingRow(String tableName, String fieldName, int id) {
+    public static String createQueryForDeletingRow(String tableName, String fieldName, int id) {
         String result = "";
 
         result += DatabaseConstants.DELETE_ROW_QUERY_START +
-                ConvertTableNameToSQLConvention(tableName) +
+                convertTableNameToSQLConvention(tableName) +
                 DatabaseConstants.WHERE +
                 fieldName + " =\"" + id + "\";";
 
         return result;
     }
 
-    public static String CreateQueryForDeletingRow(String tableName, String fieldName, String value) {
+    public static String createQueryForDeletingRow(String tableName, String fieldName, String value) {
         String result = "";
 
         result += DatabaseConstants.DELETE_ROW_QUERY_START +
-                ConvertTableNameToSQLConvention(tableName) +
+                convertTableNameToSQLConvention(tableName) +
                 DatabaseConstants.WHERE +
                 fieldName + " =\"" + value + "\";";
 
         return result;
     }
 
-    public static String CreateQueryForDeletingTable(String tableName) {
+    public static String createQueryForDeletingTable(String tableName) {
         String result = "";
 
-        result += DatabaseConstants.DROP_TABLE_IF_EXISTS + ConvertTableNameToSQLConvention(tableName);
+        result += DatabaseConstants.DROP_TABLE_IF_EXISTS + convertTableNameToSQLConvention(tableName);
 
         return result;
     }
 
-    public static String CreateQueryForSelectingWholeTable(String tableName) {
+    public static String createQueryForSelectingWholeTable(String tableName) {
         String result = "";
 
         result += DatabaseConstants.SELECT +
                 "*" +
                 DatabaseConstants.FROM +
-                ConvertTableNameToSQLConvention(tableName) + ";";
+                convertTableNameToSQLConvention(tableName) + ";";
 
         return result;
     }

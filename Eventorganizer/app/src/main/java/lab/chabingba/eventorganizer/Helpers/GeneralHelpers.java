@@ -10,7 +10,7 @@ import lab.chabingba.eventorganizer.Helpers.Constants.GeneralConstants;
  * Created by Tsvetan on 2015-05-25.
  */
 public final class GeneralHelpers {
-    public static void FirstAppRun(Context context) {
+    public static void firstAppRun(Context context) {
         SharedPreferences settings = context.getSharedPreferences(GeneralConstants.PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor settingsEditor = settings.edit();
 
@@ -23,7 +23,7 @@ public final class GeneralHelpers {
         }
     }
 
-    public static int GetCurrentDatabaseVersion(Context context) {
+    public static int getCurrentDatabaseVersion(Context context) {
         SharedPreferences settings = context.getSharedPreferences(GeneralConstants.PREFS_NAME, Context.MODE_PRIVATE);
         int currentDBVersion = settings.getInt(DatabaseConstants.DATABASE_VERSION_VARIABLE, DatabaseConstants.DATABASE_DEFAULT_VERSION);
 
