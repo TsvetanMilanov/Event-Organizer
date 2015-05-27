@@ -7,7 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import lab.chabingba.eventorganizer.Helpers.Constants.GeneralConstants;
+import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 import lab.chabingba.eventorganizer.Helpers.ValidatorHelpers;
 
 /**
@@ -37,6 +37,18 @@ public class MyEvent implements Serializable {
         this.setIsOld(inputIsOld);
     }
 
+    public MyEvent(int inputID, String inputType, String inputDate, String inputLocation,
+                   String inputDescription, boolean inputIsFinished, boolean inputHasNotification, boolean inputIsOld) {
+        this.setId(inputID);
+        this.setType(inputType);
+        this.setDate(inputDate);
+        this.setLocation(inputLocation);
+        this.setDescription(inputDescription);
+        this.setIsFinished(inputIsFinished);
+        this.setHasNotification(inputHasNotification);
+        this.setIsOld(inputIsOld);
+    }
+
     public int getId() {
         return this.id;
     }
@@ -46,7 +58,7 @@ public class MyEvent implements Serializable {
     }
 
     public String getType() {
-        return ValidatorHelpers.isNullOrEmpty(this.type);
+        return ValidatorHelpers.isNullOrEmptyConverter(this.type);
     }
 
     public void setType(String type) {
@@ -62,7 +74,7 @@ public class MyEvent implements Serializable {
     }
 
     public String getDateAsStringWithDefaultFormat() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GeneralConstants.DATE_DEFAULT_FORMAT);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.DATE_DEFAULT_FORMAT);
 
         String result = simpleDateFormat.format(this.date.getTime());
 
@@ -74,9 +86,10 @@ public class MyEvent implements Serializable {
     }
 
     public void setDate(String date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GeneralConstants.DATE_DEFAULT_FORMAT);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.DATE_DEFAULT_FORMAT);
 
         try {
+            this.date = Calendar.getInstance();
             this.date.setTime(simpleDateFormat.parse(date));
         } catch (ParseException e) {
             e.printStackTrace();
@@ -85,7 +98,7 @@ public class MyEvent implements Serializable {
     }
 
     public String getLocation() {
-        return ValidatorHelpers.isNullOrEmpty(this.location);
+        return ValidatorHelpers.isNullOrEmptyConverter(this.location);
     }
 
     public void setLocation(String location) {
@@ -93,7 +106,7 @@ public class MyEvent implements Serializable {
     }
 
     public String getDescription() {
-        return ValidatorHelpers.isNullOrEmpty(this.description);
+        return ValidatorHelpers.isNullOrEmptyConverter(this.description);
     }
 
     public void setDescription(String description) {
@@ -129,7 +142,7 @@ public class MyEvent implements Serializable {
 
         Calendar date = this.getDate();
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GeneralConstants.DATE_FORMATTER);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMATTER);
 
         result += simpleDateFormat.format(date.getTime());
 
@@ -141,7 +154,7 @@ public class MyEvent implements Serializable {
 
         Calendar date = this.getDate();
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GeneralConstants.DATE_FORMATTER_DAY_OF_WEEK);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMATTER_DAY_OF_WEEK);
 
         result += simpleDateFormat.format(date.getTime());
 
@@ -153,7 +166,7 @@ public class MyEvent implements Serializable {
 
         Calendar date = this.getDate();
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GeneralConstants.DATE_FORMATTER_HOUR);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMATTER_HOUR);
 
         result += simpleDateFormat.format(date.getTime());
 

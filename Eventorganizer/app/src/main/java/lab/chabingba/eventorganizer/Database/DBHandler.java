@@ -11,7 +11,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
-import lab.chabingba.eventorganizer.Helpers.Constants.GeneralConstants;
+import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 import lab.chabingba.eventorganizer.Helpers.QueryHelpers;
 
 /**
@@ -37,6 +37,10 @@ public class DBHandler extends SQLiteOpenHelper {
         addCategory(db, DatabaseConstants.DEFAULT_EVENT_TABLE_NAME);
 
         Log.i("CREATE", "ONCREATE completed.");
+
+        Log.i("QUERY", DatabaseConstants.CREATE_EVENT_TYPES_TABLE);
+
+        db.execSQL(DatabaseConstants.CREATE_EVENT_TYPES_TABLE);
     }
 
     @Override
@@ -47,7 +51,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     private int updateDatabaseVersion(Context context) {
-        SharedPreferences settings = context.getSharedPreferences(GeneralConstants.PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences settings = context.getSharedPreferences(GlobalConstants.PREFS_NAME, Context.MODE_PRIVATE);
         int currentDatabaseVersion = settings.getInt(DatabaseConstants.DATABASE_VERSION_VARIABLE, DatabaseConstants.DATABASE_DEFAULT_VERSION);
 
         int result = currentDatabaseVersion + 1;
@@ -274,20 +278,23 @@ public class DBHandler extends SQLiteOpenHelper {
         boolean hasNotification = cursor.getInt(cursor.getColumnIndex(DatabaseConstants.EVENT_FIELD_HAS_NOTIFICATION)) > 0;
         boolean isOld = cursor.getInt(cursor.getColumnIndex(DatabaseConstants.EVENT_FIELD_IS_OLD)) > 0;
 
-        MyEvent eventToAdd = new MyEvent();
+        MyEvent eventToAdd = new MyEvent(id, type, date, location, description, isFinished, hasNotification, isOld);
 
-        if (id >= 0) {
-            eventToAdd.setId(id);
-        } else {
-            eventToAdd.setId(777);
-        }
+        /*
+            //Manual set event properties:
+            if (id >= 0) {
+                eventToAdd.setId(id);
+            } else {
+                eventToAdd.setId(777);
+            }
 
-        eventToAdd.setType(type);
-        eventToAdd.setDate(date);
-        eventToAdd.setLocation(location);
-        eventToAdd.setIsFinished(isFinished);
-        eventToAdd.setHasNotification(hasNotification);
-        eventToAdd.setIsOld(isOld);
+            eventToAdd.setType(type);
+            eventToAdd.setDate(date);
+            eventToAdd.setLocation(location);
+            eventToAdd.setIsFinished(isFinished);
+            eventToAdd.setHasNotification(hasNotification);
+            eventToAdd.setIsOld(isOld);
+        */
 
         return eventToAdd;
     }

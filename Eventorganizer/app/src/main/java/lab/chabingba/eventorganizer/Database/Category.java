@@ -32,6 +32,6 @@ public class Category implements Serializable {
     }
 
     public void setName(String name) {
-        this.name = ValidatorHelpers.isNullOrEmpty(name);
+        this.name = ValidatorHelpers.isNullOrEmptyConverter(name);
     }
 }

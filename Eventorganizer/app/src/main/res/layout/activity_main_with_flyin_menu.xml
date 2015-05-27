@@ -1,0 +1,109 @@
+<lab.chabingba.eventorganizer.Helpers.Visual.FlyInMenuContainer xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#404040"
+        android:paddingTop="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="70dp"
+            android:id="@+id/ivLogoInMenu"
+            android:background="@drawable/logo_white"
+            android:layout_marginRight="30dp" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#ff7a7a7a"></View>
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/lvOptions"
+            android:headerDividersEnabled="true"
+            android:stackFromBottom="false"
+            android:footerDividersEnabled="true" />
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="0dp"
+        android:background="#ffffff">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="5dp">
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#ff008ad4"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:layout_marginTop="5dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageButton
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/options_icon_white"
+                        android:id="@+id/imageButtonOptionsMain"
+                        android:onClick="onOptionsButtonClicked"
+                        android:layout_marginLeft="5dp" />
+
+                    <ImageButton
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/imageButtonAddCategory"
+                        android:background="@drawable/add_button_white"
+                        android:onClick="onAddCategoryClicked"
+                        android:layout_alignParentTop="true"
+                        android:layout_toLeftOf="@+id/imageButtonRemoveCategory"
+                        android:layout_toStartOf="@+id/imageButtonRemoveCategory"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginEnd="23dp" />
+
+                    <ImageButton
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/imageButtonRemoveCategory"
+                        android:onClick="onDeleteCategoryClicked"
+                        android:background="@drawable/remove_button_white"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+                </RelativeLayout>
+            </TableRow>
+
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/lvMainMenu"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="60dp"
+                android:layout_marginLeft="30dp"
+                android:headerDividersEnabled="true" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</lab.chabingba.eventorganizer.Helpers.Visual.FlyInMenuContainer>

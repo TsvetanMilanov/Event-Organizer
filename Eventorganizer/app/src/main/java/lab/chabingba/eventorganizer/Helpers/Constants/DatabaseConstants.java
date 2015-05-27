@@ -15,7 +15,7 @@ public final class DatabaseConstants {
             DatabaseConstants.EVENT_FIELD_TYPE + " TEXT, " +
             DatabaseConstants.EVENT_FIELD_DATE + " TEXT, " +
             DatabaseConstants.EVENT_FIELD_LOCATION + " TEXT, " +
-            DatabaseConstants.EVENT_FIELD_DESCRIPTION + "TEXT," +
+            DatabaseConstants.EVENT_FIELD_DESCRIPTION + " TEXT," +
             DatabaseConstants.EVENT_FIELD_IS_FINISHED + " BOOLEAN, " +
             DatabaseConstants.EVENT_FIELD_HAS_NOTIFICATION + " BOOLEAN, " +
             DatabaseConstants.EVENT_FIELD_IS_OLD + " BOOLEAN" +
@@ -46,4 +46,6 @@ public final class DatabaseConstants {
     public static final String SELECT = "SELECT ";
     public static final String FROM = " FROM ";
     public static final String SELECT_ALL_TABLES_QUERY = "SELECT name FROM sqlite_master WHERE type='table'";
+
+    public static final String CREATE_EVENT_TYPES_TABLE = "CREATE TABLE Event_types (_id INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT);";
 }
