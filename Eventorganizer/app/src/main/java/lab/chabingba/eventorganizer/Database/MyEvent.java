@@ -13,7 +13,7 @@ import lab.chabingba.eventorganizer.Helpers.ValidatorHelpers;
 /**
  * Created by Tsvetan on 2015-05-25.
  */
-public class MyEvent implements Serializable {
+public class MyEvent implements Serializable, Comparable {
     private int id;
     private String type;
     private Calendar date;
@@ -171,5 +171,18 @@ public class MyEvent implements Serializable {
         result += simpleDateFormat.format(date.getTime());
 
         return result;
+    }
+
+    @Override
+    public int compareTo(Object another) {
+        MyEvent secondEvent = (MyEvent) another;
+
+        if (this.getDate().compareTo(secondEvent.getDate()) > 0) {
+            return 1;
+        } else if (this.getDate().compareTo(secondEvent.getDate()) < 0) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 }

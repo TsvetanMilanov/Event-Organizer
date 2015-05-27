@@ -13,10 +13,21 @@ public final class GlobalConstants {
 
     public static final String FIRST_APP_RUN_VARIABLE = "FIRST_RUN";
     public static final String PREFS_NAME = "preferences";
+    public static final int CATEGORY_TEXT_VIEW_PADDING_RIGHT = 60;
 
     public enum MenuState {
         OPEN, CLOSED, OPENING, CLOSING
     }
 
     public static final String[] MENU_OPTIONS = {"Options", "Force notification", "About", "Exit"};
+
+    public static final String[] DEFAULT_EVENT_TYPES = {
+            "Lecture",
+            "Non-Technical Lecture",
+            "Seminar",
+            "Exam",
+            "Workshop",
+            "Deadline",
+            "Other"
+    };
 }

@@ -41,6 +41,14 @@ public class DBHandler extends SQLiteOpenHelper {
         Log.i("QUERY", DatabaseConstants.CREATE_EVENT_TYPES_TABLE);
 
         db.execSQL(DatabaseConstants.CREATE_EVENT_TYPES_TABLE);
+
+        AddDefaultTypesToDatabase(db);
+    }
+
+    private void AddDefaultTypesToDatabase(SQLiteDatabase db) {
+        for (int i = 0; i < GlobalConstants.DEFAULT_EVENT_TYPES.length; i++) {
+            this.addEventType(db, GlobalConstants.DEFAULT_EVENT_TYPES[i]);
+        }
     }
 
     @Override
@@ -297,5 +305,49 @@ public class DBHandler extends SQLiteOpenHelper {
         */
 
         return eventToAdd;
+    }
+
+    public void addEventType(String type) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseConstants.TYPE_FIELD_TYPE, type);
+
+        SQLiteDatabase database = getWritableDatabase();
+
+        database.insert(QueryHelpers.convertTableNameToSQLConvention(DatabaseConstants.EVENT_TYPE_TABLE_NAME), null, contentValues);
+
+        database.close();
+    }
+
+    private void addEventType(SQLiteDatabase database, String type) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseConstants.TYPE_FIELD_TYPE, type);
+
+        database.insert(QueryHelpers.convertTableNameToSQLConvention(DatabaseConstants.EVENT_TYPE_TABLE_NAME), null, contentValues);
+
+    }
+
+    public ArrayList<String> getEventTypesAsArray() {
+        ArrayList<String> result = new ArrayList<>();
+
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+
+        String query = QueryHelpers.createQueryForSelectingWholeTable(DatabaseConstants.EVENT_TYPE_TABLE_NAME);
+
+        Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            String type = cursor.getString(cursor.getColumnIndex(DatabaseConstants.TYPE_FIELD_TYPE));
+
+            result.add(type);
+
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+        sqLiteDatabase.close();
+
+        return result;
     }
 }

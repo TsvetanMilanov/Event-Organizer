@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
     public CustomExpandableListAdapter(Context context, ArrayList<MyEvent> listOfEvents) {
         this.listOfEvents = listOfEvents;
         this.context = context;
-        this.parentList = GeneralHelpers.createStringArrayWithEventNames(this.listOfEvents);
+        this.parentList = GeneralHelpers.createStringArrayWithEventTypesAndDates(this.listOfEvents);
     }
 
     @Override
@@ -72,6 +73,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         MyEvent currentEvent = this.listOfEvents.get(groupPosition);
 
         TextView tvEventType = (TextView) customView.findViewById(R.id.tvEventType);
+        tvEventType.setPadding(60, 0, 0, 0);
         tvEventType.setText(currentEvent.getType());
 
         TextView tvEventDate = (TextView) customView.findViewById(R.id.tvDateOfEvent);
@@ -96,6 +98,20 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
         TextView tvDescription = (TextView) customView.findViewById(R.id.tvDescription);
         tvDescription.setText(currentEvent.getDescription());
+
+        CheckBox checkBoxIsFinished = (CheckBox) customView.findViewById(R.id.cbIsFinished);
+
+        checkBoxIsFinished.setClickable(false);
+
+        if (currentEvent.getIsFinished()) {
+            checkBoxIsFinished.setChecked(true);
+        } else {
+            checkBoxIsFinished.setChecked(false);
+        }
+
+        TextView tvLocation = (TextView) customView.findViewById(R.id.tvLocationExpandable);
+
+        tvLocation.append(currentEvent.getLocation());
 
         return customView;
     }

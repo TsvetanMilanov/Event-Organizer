@@ -48,4 +48,8 @@ public final class DatabaseConstants {
     public static final String SELECT_ALL_TABLES_QUERY = "SELECT name FROM sqlite_master WHERE type='table'";
 
     public static final String CREATE_EVENT_TYPES_TABLE = "CREATE TABLE Event_types (_id INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT);";
+
+    public static final String TYPE_FIELD_TYPE = "type";
+
+    public static final String EVENT_TYPE_TABLE_NAME = "Event types";
 }

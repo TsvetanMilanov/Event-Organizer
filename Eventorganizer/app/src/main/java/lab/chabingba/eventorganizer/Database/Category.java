@@ -2,6 +2,7 @@ package lab.chabingba.eventorganizer.Database;
 
 import java.io.Serializable;
 
+import lab.chabingba.eventorganizer.Helpers.QueryHelpers;
 import lab.chabingba.eventorganizer.Helpers.ValidatorHelpers;
 
 /**
@@ -29,6 +30,10 @@ public class Category implements Serializable {
 
     public String getName() {
         return this.name;
+    }
+
+    public String getSQLName() {
+        return QueryHelpers.convertTableNameToSQLConvention(this.name);
     }
 
     public void setName(String name) {

@@ -91,6 +91,19 @@
                         android:layout_alignParentTop="true"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Categories"
+                        android:id="@+id/tvMainCategories"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/imageButtonOptionsMain"
+                        android:textSize="18dp"
+                        android:gravity="center_horizontal"
+                        android:layout_toLeftOf="@+id/imageButtonAddCategory"
+                        android:layout_toStartOf="@+id/imageButtonAddCategory"
+                        android:paddingRight="15dp" />
                 </RelativeLayout>
             </TableRow>
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -89,12 +90,8 @@ public class MainActivity extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intentForCurrentEventsActivity = new Intent(MainActivity.this, CurrentEventsActivity.class);
-
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("Category", listOfCategories.get(position));
-
-                intentForCurrentEventsActivity.putExtras(bundle);
+                Intent intentForCurrentEventsActivity = GeneralHelpers.
+                        createIntentForCurrentEventsActivity(MainActivity.this, MainActivity.this.listOfCategories.get(position), false);
 
                 startActivity(intentForCurrentEventsActivity);
             }
@@ -127,11 +124,11 @@ public class MainActivity extends Activity {
     public void onAddCategoryClicked(View v) {
         LayoutInflater li = LayoutInflater.from(this);
         View promptsView = li.inflate(R.layout.category_dialog, null);
+        promptsView.setBackgroundColor(Color.rgb(165, 165, 165));
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 this);
 
-        // set prompts.xml to alertdialog builder
         alertDialogBuilder.setView(promptsView);
 
         final EditText userInput = (EditText) promptsView
@@ -150,7 +147,7 @@ public class MainActivity extends Activity {
                                 if (ValidatorHelpers.isNullOrEmpty(categoryName)) {
                                     Toast.makeText(MainActivity.this, "The category name can't be empty.", Toast.LENGTH_LONG).show();
                                 } else {
-                                    MainActivity.this.database.addCategory(categoryName);
+                                    MainActivity.this.database.addCategory(categoryName.trim());
                                     Intent intent = new Intent(MainActivity.this, MainActivity.class);
                                     startActivity(intent);
                                     finish();
@@ -177,11 +174,9 @@ public class MainActivity extends Activity {
 
         AlertDialog dialog;
 
-        // arraylist to keep the selected items
         final ArrayList seletedItems = new ArrayList();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select The Difficulty Level");
         builder.setMultiChoiceItems(items, null,
                 new DialogInterface.OnMultiChoiceClickListener() {
                     // indexSelected contains the index of item (of which checkbox checked)
@@ -189,8 +184,6 @@ public class MainActivity extends Activity {
                     public void onClick(DialogInterface dialog, int indexSelected,
                                         boolean isChecked) {
                         if (isChecked) {
-                            // If the user checked the item, add it to the selected items
-                            // write your code when user checked the checkbox
                             seletedItems.add(indexSelected);
                         } else if (seletedItems.contains(indexSelected)) {
                             // Else, if the item is already in the array, remove it
@@ -199,14 +192,10 @@ public class MainActivity extends Activity {
                         }
                     }
                 })
-                // Set the action buttons
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        //  Your code when user clicked on OK
-                        //  You can write the code  to save the selected item here
                         for (int i = 0; i < seletedItems.size(); i++) {
-                            // TODO: For events only!!! change the remove logic because the id is AUTOINCREMENT and it does not refresh and it may be 1, 2, 5...
                             MainActivity.this.database.removeCategory(items[(int) seletedItems.get(i)]);
                         }
 
@@ -223,7 +212,7 @@ public class MainActivity extends Activity {
                     }
                 });
 
-        dialog = builder.create();//AlertDialog dialog; create like this outside onClick
+        dialog = builder.create();
         dialog.show();
     }
 }

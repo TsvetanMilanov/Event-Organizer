@@ -1,10 +1,14 @@
 package lab.chabingba.eventorganizer.Helpers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
+import lab.chabingba.eventorganizer.CurrentEventsActivity;
 import lab.chabingba.eventorganizer.Database.Category;
 import lab.chabingba.eventorganizer.Database.MyEvent;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
@@ -44,12 +48,61 @@ public final class GeneralHelpers {
         return result;
     }
 
-    public static String[] createStringArrayWithEventNames(ArrayList<MyEvent> listOfEvents) {
+    public static String[] createStringArrayWithEventTypesAndDates(ArrayList<MyEvent> listOfEvents) {
         String[] result = new String[listOfEvents.size()];
 
         for (int i = 0; i < listOfEvents.size(); i++) {
-            result[i] = listOfEvents.get(i).getType();
+            result[i] = listOfEvents.get(i).getType() + " " + listOfEvents.get(i).getEventDateAsString();
         }
+
+        return result;
+    }
+
+    public static ArrayList<MyEvent> selectCurrentEvents(ArrayList<MyEvent> listWithEventsFromTable) {
+        ArrayList<MyEvent> result = new ArrayList<>();
+
+        for (int i = 0; i < listWithEventsFromTable.size(); i++) {
+            MyEvent currentEvent = listWithEventsFromTable.get(i);
+
+            if (currentEvent.getIsOld() == true) {
+                continue;
+            } else {
+                result.add(currentEvent);
+            }
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    public static ArrayList<MyEvent> selectOldEvents(ArrayList<MyEvent> listWithEventsFromTable) {
+        ArrayList<MyEvent> result = new ArrayList<>();
+
+        for (int i = 0; i < listWithEventsFromTable.size(); i++) {
+            MyEvent currentEvent = listWithEventsFromTable.get(i);
+
+            if (currentEvent.getIsOld() == false) {
+                continue;
+            } else {
+                result.add(currentEvent);
+            }
+        }
+
+        Collections.sort(result);
+        Collections.reverse(result);
+
+        return result;
+    }
+
+    public static Intent createIntentForCurrentEventsActivity(Context context, Category category, boolean loadOldEvents) {
+        Intent result = new Intent(context, CurrentEventsActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("Category", category);
+        bundle.putBoolean("LoadOldEvents", loadOldEvents);
+
+        result.putExtras(bundle);
 
         return result;
     }
