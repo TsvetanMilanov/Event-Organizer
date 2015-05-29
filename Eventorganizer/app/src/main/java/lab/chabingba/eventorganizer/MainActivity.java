@@ -134,14 +134,11 @@ public class MainActivity extends Activity {
         final EditText userInput = (EditText) promptsView
                 .findViewById(R.id.etDialogCategoryName);
 
-        // set dialog message
         alertDialogBuilder
                 .setCancelable(false)
-                .setPositiveButton("OK",
+                .setPositiveButton(GlobalConstants.DIALOG_SAVE_WORD,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                // get user input and set it to result
-                                // edit text
                                 String categoryName = userInput.getText().toString();
 
                                 if (ValidatorHelpers.isNullOrEmpty(categoryName)) {
@@ -154,17 +151,15 @@ public class MainActivity extends Activity {
                                 }
                             }
                         })
-                .setNegativeButton("Cancel",
+                .setNegativeButton(GlobalConstants.DIALOG_CANCEL_WORD,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
                         });
 
-        // create alert dialog
         AlertDialog alertDialog = alertDialogBuilder.create();
 
-        // show it
         alertDialog.show();
     }
 
@@ -174,7 +169,7 @@ public class MainActivity extends Activity {
 
         AlertDialog dialog;
 
-        final ArrayList seletedItems = new ArrayList();
+        final ArrayList selectedItems = new ArrayList();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMultiChoiceItems(items, null,
@@ -184,28 +179,26 @@ public class MainActivity extends Activity {
                     public void onClick(DialogInterface dialog, int indexSelected,
                                         boolean isChecked) {
                         if (isChecked) {
-                            seletedItems.add(indexSelected);
-                        } else if (seletedItems.contains(indexSelected)) {
-                            // Else, if the item is already in the array, remove it
-                            // write your code when user Uchecked the checkbox
-                            seletedItems.remove(Integer.valueOf(indexSelected));
+                            selectedItems.add(indexSelected);
+                        } else if (selectedItems.contains(indexSelected)) {
+                            selectedItems.remove(Integer.valueOf(indexSelected));
                         }
                     }
                 })
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(GlobalConstants.DIALOG_DELETE_WORD, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        for (int i = 0; i < seletedItems.size(); i++) {
-                            MainActivity.this.database.removeCategory(items[(int) seletedItems.get(i)]);
+                        for (int i = 0; i < selectedItems.size(); i++) {
+                            MainActivity.this.database.removeCategory(items[(int) selectedItems.get(i)]);
                         }
 
-                        if (seletedItems.size() > 0) {
+                        if (selectedItems.size() > 0) {
                             Intent intent = new Intent(MainActivity.this, MainActivity.class);
                             startActivity(intent);
                         }
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(GlobalConstants.DIALOG_CANCEL_WORD, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();

@@ -49,6 +49,7 @@
             android:paddingBottom="5dp">
 
             <TableRow
+                android:id="@+id/trMainHeaderRow"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="#ff008ad4"
@@ -60,7 +61,8 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:gravity="center">
 
                     <ImageButton
                         android:layout_width="30dp"
@@ -68,7 +70,8 @@
                         android:background="@drawable/options_icon_white"
                         android:id="@+id/imageButtonOptionsMain"
                         android:onClick="onOptionsButtonClicked"
-                        android:layout_marginLeft="5dp" />
+                        android:layout_marginLeft="5dp"
+                        android:layout_centerVertical="true" />
 
                     <ImageButton
                         android:layout_width="30dp"
@@ -80,7 +83,8 @@
                         android:layout_toLeftOf="@+id/imageButtonRemoveCategory"
                         android:layout_toStartOf="@+id/imageButtonRemoveCategory"
                         android:layout_marginRight="20dp"
-                        android:layout_marginEnd="23dp" />
+                        android:layout_marginEnd="23dp"
+                        android:layout_centerVertical="true" />
 
                     <ImageButton
                         android:layout_width="30dp"
@@ -90,7 +94,8 @@
                         android:background="@drawable/remove_button_white"
                         android:layout_alignParentTop="true"
                         android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true" />
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true" />
 
                     <TextView
                         android:layout_width="wrap_content"

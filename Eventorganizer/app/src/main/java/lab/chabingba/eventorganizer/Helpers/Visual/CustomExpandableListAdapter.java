@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -21,7 +22,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private ArrayList<MyEvent> listOfEvents;
     private String[] parentList;
-    private String[] childList;
 
     public CustomExpandableListAdapter(Context context, ArrayList<MyEvent> listOfEvents) {
         this.listOfEvents = listOfEvents;
@@ -73,11 +73,18 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         MyEvent currentEvent = this.listOfEvents.get(groupPosition);
 
         TextView tvEventType = (TextView) customView.findViewById(R.id.tvEventType);
-        tvEventType.setPadding(60, 0, 0, 0);
         tvEventType.setText(currentEvent.getType());
 
         TextView tvEventDate = (TextView) customView.findViewById(R.id.tvDateOfEvent);
         tvEventDate.setText(currentEvent.getEventDateAsString());
+
+        ImageView ivIcon = (ImageView) customView.findViewById(R.id.ivExpandableListIcon);
+
+        if (!isExpanded) {
+            ivIcon.setImageResource(R.drawable.arrow_down_light_grey);
+        } else {
+            ivIcon.setImageResource(R.drawable.arrow_right_light_grey);
+        }
 
         return customView;
     }

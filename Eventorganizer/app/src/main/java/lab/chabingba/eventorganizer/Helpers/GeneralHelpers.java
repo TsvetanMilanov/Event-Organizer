@@ -99,8 +99,8 @@ public final class GeneralHelpers {
         Intent result = new Intent(context, CurrentEventsActivity.class);
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable("Category", category);
-        bundle.putBoolean("LoadOldEvents", loadOldEvents);
+        bundle.putSerializable(GlobalConstants.CATEGORY_WORD, category);
+        bundle.putBoolean(GlobalConstants.LOAD_OLD_EVENTS_TEXT, loadOldEvents);
 
         result.putExtras(bundle);
 

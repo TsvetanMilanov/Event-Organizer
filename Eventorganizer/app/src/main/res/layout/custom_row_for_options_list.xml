@@ -16,6 +16,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:textColor="#ffffff"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp" />
     </TableRow>

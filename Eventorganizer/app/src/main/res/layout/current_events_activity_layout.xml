@@ -2,75 +2,79 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     android:nestedScrollingEnabled="false"
     android:paddingLeft="5dp"
-    android:paddingRight="5dp"
-    android:background="#ffffff">
+    android:paddingRight="5dp">
 
     <TableRow
+        android:id="@+id/tableRow"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#ff008ad4"
-        android:paddingLeft="10dp"
-        android:paddingTop="5dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="5dp"
         android:layout_marginTop="5dp"
-        android:id="@+id/tableRow">
+        android:background="#ff008ad4"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center_vertical|center|center_horizontal">
 
             <ImageButton
+                android:id="@+id/imageButtonOldEvents"
                 android:layout_width="60dp"
                 android:layout_height="30dp"
                 android:background="@drawable/old_events_button_white"
-                android:id="@+id/imageButtonOldEvents"
                 android:onClick="onOldEventsClicked"
-                android:layout_marginLeft="5dp" />
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
             <TextView
+                android:id="@+id/tvCurrentCategory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/tvCurrentCategory"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/imageButtonOldEvents"
+                android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@+id/imageButtonAddEvent"
+                android:layout_toRightOf="@+id/imageButtonOldEvents"
                 android:layout_toStartOf="@+id/imageButtonAddEvent"
                 android:gravity="center_horizontal"
+                android:text="New Text" />
+
+            <ImageButton
+                android:id="@+id/imageButtonAddEvent"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/add_button_white"
+                android:onClick="onAddEventClicked"
+                android:layout_alignTop="@+id/imageButtonRemoveEvent"
+                android:layout_toLeftOf="@+id/imageButtonRemoveEvent"
+                android:layout_toStartOf="@+id/imageButtonRemoveEvent"
                 android:layout_marginRight="10dp" />
 
             <ImageButton
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/imageButtonAddEvent"
-                android:background="@drawable/add_button_white"
-                android:onClick="onAddEventClicked"
-                android:layout_alignParentTop="true"
-                android:layout_toLeftOf="@+id/imageButtonRemoveEvent"
-                android:layout_toStartOf="@+id/imageButtonRemoveEvent"
-                android:layout_marginRight="20dp" />
-
-            <ImageButton
-                android:layout_width="30dp"
-                android:layout_height="30dp"
                 android:id="@+id/imageButtonRemoveEvent"
-                android:onClick="onDeleteEventClicked"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:background="@drawable/remove_button_white"
-                android:layout_alignParentTop="true"
+                android:onClick="onDeleteEventClicked"
+                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />
         </RelativeLayout>
     </TableRow>
 
     <ExpandableListView
+        android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/expandableListView"
         android:layout_below="@+id/tableRow"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:groupIndicator="@drawable/group_indicator" />
+        android:groupIndicator="@null" />
 </RelativeLayout>

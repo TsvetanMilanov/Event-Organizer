@@ -18,6 +18,7 @@ import lab.chabingba.eventorganizer.Database.Category;
 import lab.chabingba.eventorganizer.Database.DBHandler;
 import lab.chabingba.eventorganizer.Database.MyEvent;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
+import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
 import lab.chabingba.eventorganizer.Helpers.ValidatorHelpers;
 import lab.chabingba.eventorganizer.Helpers.Visual.CustomSpinnerItem;
@@ -54,7 +55,7 @@ public class AddEventActivity extends Activity {
 
         database = new DBHandler(this, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
 
-        category = (Category) getIntent().getSerializableExtra("Category");
+        category = (Category) getIntent().getSerializableExtra(GlobalConstants.CATEGORY_WORD);
 
         this.tableToAddTo = category.getSQLName();
         this.listOfEventTypes = database.getEventTypesAsArray();

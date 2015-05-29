@@ -1,7 +1,7 @@
 package lab.chabingba.eventorganizer;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ExpandableListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,11 +23,11 @@ import lab.chabingba.eventorganizer.Helpers.Visual.CustomExpandableListAdapter;
 /**
  * Created by Tsvetan on 2015-05-26.
  */
-public class CurrentEventsActivity extends Activity {
+public class CurrentEventsActivity extends ExpandableListActivity {
     private ExpandableListView expandableListView;
     private ArrayList<MyEvent> listOfEvents;
     private DBHandler database;
-    private String tableName = "";
+    private String tableName = GlobalConstants.EMPTY_STRING;
     private Category category;
     private boolean loadOldEvents;
 
@@ -40,7 +40,7 @@ public class CurrentEventsActivity extends Activity {
 
         database = new DBHandler(this, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
 
-        category = (Category) getIntent().getSerializableExtra("Category");
+        category = (Category) getIntent().getSerializableExtra(GlobalConstants.CATEGORY_WORD);
 
         tableName = category.getSQLName();
 
@@ -48,11 +48,11 @@ public class CurrentEventsActivity extends Activity {
 
         tvCategoryName.setText(category.getName());
 
-        loadOldEvents = getIntent().getBooleanExtra("LoadOldEvents", false);
+        loadOldEvents = getIntent().getBooleanExtra(GlobalConstants.LOAD_OLD_EVENTS_TEXT, false);
 
         if (loadOldEvents == true) {
             listOfEvents = GeneralHelpers.selectOldEvents(database.createListWithEventsFromTable(tableName));
-            tvCategoryName.append(" - Old Events");
+            tvCategoryName.append(GlobalConstants.OLD_EVENTS_TEXT_TO_APPEND);
             ImageButton imageButtonAdd = (ImageButton) findViewById(R.id.imageButtonAddEvent);
             imageButtonAdd.setVisibility(View.GONE);
             ImageButton imageButtonOldEvents = (ImageButton) findViewById(R.id.imageButtonOldEvents);
@@ -62,7 +62,7 @@ public class CurrentEventsActivity extends Activity {
             listOfEvents = GeneralHelpers.selectCurrentEvents(database.createListWithEventsFromTable(tableName));
         }
 
-        expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
+        expandableListView = (ExpandableListView) findViewById(android.R.id.list);
         expandableListView.setAdapter(new CustomExpandableListAdapter(this, listOfEvents));
 
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
@@ -70,7 +70,7 @@ public class CurrentEventsActivity extends Activity {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 Intent intent = new Intent(CurrentEventsActivity.this, EditEventActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("Event", CurrentEventsActivity.this.listOfEvents);
+                bundle.putSerializable(GlobalConstants.EVENT_WORD, CurrentEventsActivity.this.listOfEvents);
 
                 intent.putExtras(bundle);
 
@@ -86,7 +86,7 @@ public class CurrentEventsActivity extends Activity {
         Intent intent = new Intent(CurrentEventsActivity.this, AddEventActivity.class);
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable("Category", this.category);
+        bundle.putSerializable(GlobalConstants.CATEGORY_WORD, this.category);
 
         intent.putExtras(bundle);
 
@@ -122,7 +122,7 @@ public class CurrentEventsActivity extends Activity {
                         }
                     }
                 })
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(GlobalConstants.DIALOG_DELETE_WORD, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         for (int i = 0; i < selectedEvents.size(); i++) {
@@ -141,7 +141,7 @@ public class CurrentEventsActivity extends Activity {
                         }
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(GlobalConstants.DIALOG_CANCEL_WORD, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
