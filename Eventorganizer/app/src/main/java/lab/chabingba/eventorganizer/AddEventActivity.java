@@ -10,7 +10,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.util.AbstractList;
 
@@ -20,7 +19,6 @@ import lab.chabingba.eventorganizer.Database.MyEvent;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
-import lab.chabingba.eventorganizer.Helpers.ValidatorHelpers;
 import lab.chabingba.eventorganizer.Helpers.Visual.CustomSpinnerItem;
 
 /**
@@ -97,20 +95,14 @@ public class AddEventActivity extends Activity {
 
         isFinished = cbIsFinished.isChecked();
 
-        if (ValidatorHelpers.isNullOrEmpty(eventLocation)) {
-            Toast.makeText(AddEventActivity.this, "The event's location can't be empty.", Toast.LENGTH_SHORT).show();
-        } else if (ValidatorHelpers.isNullOrEmpty(eventDescription)) {
-            Toast.makeText(AddEventActivity.this, "The event's description can't be empty.", Toast.LENGTH_SHORT).show();
-        } else {
-            this.eventToAdd = new MyEvent(eventType, eventDateAndHour, eventLocation, eventDescription, isFinished, isFinished, isFinished);
+        this.eventToAdd = new MyEvent(eventType, eventDateAndHour, eventLocation, eventDescription, isFinished, isFinished, isFinished);
 
-            this.database.addEvent(eventToAdd, this.tableToAddTo);
+        this.database.addEvent(eventToAdd, this.tableToAddTo);
 
-            Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(AddEventActivity.this, this.category, false);
+        Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(AddEventActivity.this, this.category, false);
 
-            startActivity(intent);
-            finish();
-        }
+        startActivity(intent);
+        finish();
     }
 
     @Override

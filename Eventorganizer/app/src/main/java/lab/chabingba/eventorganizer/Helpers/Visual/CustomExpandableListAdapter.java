@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import lab.chabingba.eventorganizer.Database.MyEvent;
 import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
+import lab.chabingba.eventorganizer.Helpers.ValidatorHelpers;
 import lab.chabingba.eventorganizer.R;
 
 /**
@@ -104,6 +105,12 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         tvHour.setText(currentEvent.getEventHourAsString() + " h");
 
         TextView tvDescription = (TextView) customView.findViewById(R.id.tvDescription);
+        if (ValidatorHelpers.isNullOrEmpty(currentEvent.getDescription())) {
+            tvDescription.setVisibility(View.GONE);
+            View secondSeparator = customView.findViewById(R.id.secondSeparator);
+            secondSeparator.setVisibility(View.GONE);
+        }
+
         tvDescription.setText(currentEvent.getDescription());
 
         CheckBox checkBoxIsFinished = (CheckBox) customView.findViewById(R.id.cbIsFinished);
@@ -119,6 +126,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         TextView tvLocation = (TextView) customView.findViewById(R.id.tvLocationExpandable);
 
         tvLocation.append(currentEvent.getLocation());
+
+        if (ValidatorHelpers.isNullOrEmpty(currentEvent.getLocation())) {
+            tvLocation.setVisibility(View.GONE);
+        }
 
         return customView;
     }
