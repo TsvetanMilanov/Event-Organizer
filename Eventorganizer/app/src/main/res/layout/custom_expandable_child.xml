@@ -2,95 +2,95 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="10dp"
     android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingBottom="10dp">
+    android:paddingRight="10dp">
 
     <TableRow
+        android:id="@+id/tableRow2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:id="@+id/tableRow2">
+        android:padding="5dp">
 
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
             <TextView
+                android:id="@+id/tvDayOfWeek"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Day_of_week"
-                android:id="@+id/tvDayOfWeek"
+                android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true" />
+                android:text="Day_of_week" />
 
             <TextView
+                android:id="@+id/tvHour"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hour"
-                android:id="@+id/tvHour"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_alignParentRight="true" />
+                android:text="Hour" />
 
         </RelativeLayout>
     </TableRow>
 
     <View
+        android:id="@+id/firstSeparator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#ff878787"
-        android:layout_below="@+id/tableRow2"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_below="@+id/tableRow2"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:id="@+id/firstSeparator"></View>
+        android:background="#ff878787"></View>
 
     <TableRow
+        android:id="@+id/tableRow3"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tableRow2"
         android:layout_centerHorizontal="true"
-        android:paddingTop="10dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:id="@+id/tableRow3">
+        android:paddingTop="10dp">
 
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
             <TextView
+                android:id="@+id/tvDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Description"
-                android:id="@+id/tvDescription"
-                android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:text="Description" />
         </RelativeLayout>
     </TableRow>
 
     <View
+        android:id="@+id/secondSeparator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#ff878787"
-        android:layout_below="@+id/tableRow3"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_below="@+id/tableRow3"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:id="@+id/secondSeparator"></View>
+        android:background="#ff878787"></View>
 
     <TableRow
+        android:id="@+id/tableRow4"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/secondSeparator"
         android:layout_centerHorizontal="true"
-        android:paddingTop="10dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:id="@+id/tableRow4">
+        android:paddingTop="10dp">
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -98,29 +98,30 @@
 
 
             <TextView
+                android:id="@+id/tvLocationExpandable"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Location: "
-                android:id="@+id/tvLocationExpandable" />
+                android:text="Location: " />
         </RelativeLayout>
     </TableRow>
 
     <TableRow
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tableRow4"
+        android:layout_alignEnd="@+id/firstSeparator"
         android:layout_alignRight="@+id/firstSeparator"
-        android:layout_alignEnd="@+id/firstSeparator">
+        android:layout_below="@+id/tableRow4">
 
         <CheckBox
+            android:id="@+id/cbIsFinished"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Event is finished"
-            android:id="@+id/cbIsFinished"
-            android:checked="false"
-            android:layout_alignParentBottom="true"
             android:layout_alignLeft="@+id/view"
-            android:layout_alignStart="@+id/view" />
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/view"
+            android:checked="false"
+            android:focusable="false"
+            android:text="Event is finished" />
     </TableRow>
 
 </RelativeLayout>

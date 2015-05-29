@@ -225,7 +225,15 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     private void logAllTableNames(SQLiteDatabase sqLiteDatabase) {
-        ArrayList<String> arrTblNames = new ArrayList<String>();
+        ArrayList<String> arrTblNames = getAllTableNames(sqLiteDatabase);
+
+        for (int i = 0; i < arrTblNames.size(); i++) {
+            Log.i("TABLE_NAME: ", arrTblNames.get(i));
+        }
+    }
+
+    public ArrayList<String> getAllTableNames(SQLiteDatabase sqLiteDatabase) {
+        ArrayList<String> arrTblNames = new ArrayList<>();
         Cursor c = sqLiteDatabase.rawQuery(DatabaseConstants.SELECT_ALL_TABLES_QUERY, null);
 
         if (c.moveToFirst()) {
@@ -235,9 +243,7 @@ public class DBHandler extends SQLiteOpenHelper {
             }
         }
 
-        for (int i = 0; i < arrTblNames.size(); i++) {
-            Log.i("TABLE_NAME: ", arrTblNames.get(i));
-        }
+        return arrTblNames;
     }
 
     public void logAllTableNames() {
@@ -349,5 +355,29 @@ public class DBHandler extends SQLiteOpenHelper {
         sqLiteDatabase.close();
 
         return result;
+    }
+
+    public void updateEvent(MyEvent editedEvent, String tableToAddTo) {
+        SQLiteDatabase database = getWritableDatabase();
+
+        String where = DatabaseConstants.EVENT_FIELD_ID + " = " + editedEvent.getId();
+
+        ContentValues eventAsContentValues = new ContentValues();
+
+        eventAsContentValues.put(DatabaseConstants.EVENT_FIELD_TYPE, editedEvent.getType());
+        eventAsContentValues.put(DatabaseConstants.EVENT_FIELD_DATE, editedEvent.getDateAsStringWithDefaultFormat());
+        eventAsContentValues.put(DatabaseConstants.EVENT_FIELD_LOCATION, editedEvent.getLocation());
+        eventAsContentValues.put(DatabaseConstants.EVENT_FIELD_DESCRIPTION, editedEvent.getDescription());
+        eventAsContentValues.put(DatabaseConstants.EVENT_FIELD_IS_FINISHED, editedEvent.getIsFinished());
+        eventAsContentValues.put(DatabaseConstants.EVENT_FIELD_HAS_NOTIFICATION, editedEvent.getHasNotification());
+        eventAsContentValues.put(DatabaseConstants.EVENT_FIELD_IS_OLD, editedEvent.getIsOld());
+
+        int result = database.update(tableToAddTo, eventAsContentValues, where, null);
+
+        if (result == 0) {
+            Log.e("UPDATE_EVENT", "Error while updating event:\n" + editedEvent.toString());
+        } else {
+            Log.e("UPDATE_EVENT", "Successfully updated event.");
+        }
     }
 }

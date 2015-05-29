@@ -47,7 +47,7 @@ public class AddEventActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_event_activity_layout);
+        setContentView(R.layout.add_and_edit_event_activity_layout);
 
         int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(this);
 

@@ -21,17 +21,14 @@
                 android:src="@drawable/arrow_right_light_grey" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="140dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Event type"
+                android:text="Text box"
                 android:id="@+id/tvEventType"
-                android:layout_marginLeft="15dp"
-                android:layout_marginStart="28dp"
-                android:layout_alignTop="@+id/ivExpandableListIcon"
-                android:layout_toRightOf="@+id/ivExpandableListIcon"
-                android:layout_toEndOf="@+id/ivExpandableListIcon"
-                android:layout_centerVertical="true" />
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/tvDateOfEvent"
+                android:layout_toStartOf="@+id/tvDateOfEvent" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -39,10 +36,9 @@
                 android:text="Date Of Event"
                 android:id="@+id/tvDateOfEvent"
                 android:textSize="18dp"
-                android:layout_alignBottom="@+id/tvEventType"
+                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true" />
+                android:layout_alignParentEnd="true" />
 
         </RelativeLayout>
     </TableRow>

@@ -50,6 +50,7 @@ public class CurrentEventsActivity extends ExpandableListActivity {
 
         loadOldEvents = getIntent().getBooleanExtra(GlobalConstants.LOAD_OLD_EVENTS_TEXT, false);
 
+        //region settings for old events
         if (loadOldEvents == true) {
             listOfEvents = GeneralHelpers.selectOldEvents(database.createListWithEventsFromTable(tableName));
             tvCategoryName.append(GlobalConstants.OLD_EVENTS_TEXT_TO_APPEND);
@@ -61,6 +62,7 @@ public class CurrentEventsActivity extends ExpandableListActivity {
         } else {
             listOfEvents = GeneralHelpers.selectCurrentEvents(database.createListWithEventsFromTable(tableName));
         }
+        //endregion
 
         expandableListView = (ExpandableListView) findViewById(android.R.id.list);
         expandableListView.setAdapter(new CustomExpandableListAdapter(this, listOfEvents));
@@ -70,13 +72,14 @@ public class CurrentEventsActivity extends ExpandableListActivity {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 Intent intent = new Intent(CurrentEventsActivity.this, EditEventActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(GlobalConstants.EVENT_WORD, CurrentEventsActivity.this.listOfEvents);
+                bundle.putSerializable(GlobalConstants.EVENT_WORD, CurrentEventsActivity.this.listOfEvents.get(groupPosition));
+                bundle.putSerializable(GlobalConstants.CATEGORY_WORD, CurrentEventsActivity.this.category);
 
                 intent.putExtras(bundle);
 
                 startActivity(intent);
                 finish();
-                return true;
+                return false;
             }
         });
 

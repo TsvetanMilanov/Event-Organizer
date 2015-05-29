@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 import lab.chabingba.eventorganizer.Helpers.ValidatorHelpers;
 
@@ -184,5 +185,22 @@ public class MyEvent implements Serializable, Comparable {
         } else {
             return 0;
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(DatabaseConstants.EVENT_FIELD_ID + " = " + this.getId());
+        stringBuilder.append(DatabaseConstants.EVENT_FIELD_ID + " = " + this.getId());
+        stringBuilder.append(DatabaseConstants.EVENT_FIELD_ID + " = " + this.getId());
+        stringBuilder.append(DatabaseConstants.EVENT_FIELD_ID + " = " + this.getId());
+        stringBuilder.append(DatabaseConstants.EVENT_FIELD_ID + " = " + this.getId());
+        stringBuilder.append(DatabaseConstants.EVENT_FIELD_ID + " = " + this.getId());
+        stringBuilder.append(DatabaseConstants.EVENT_FIELD_ID + " = " + this.getId());
+        stringBuilder.append(DatabaseConstants.EVENT_FIELD_ID + " = " + this.getId());
+
+        return stringBuilder.toString();
+
     }
 }
