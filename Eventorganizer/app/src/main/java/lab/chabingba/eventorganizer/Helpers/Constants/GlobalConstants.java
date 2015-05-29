@@ -11,6 +11,8 @@ public final class GlobalConstants {
     public static final String DATE_DEFAULT_FORMAT = "yyyy-MM-dd HH:mm:ss";
     //endregion
 
+    public static final String NAME_OF_INTENT_SERVICE = "EventOrganizerIntentService";
+
     public static final String EMPTY_STRING = "";
 
     public static final String FIRST_APP_RUN_VARIABLE = "FIRST_RUN";

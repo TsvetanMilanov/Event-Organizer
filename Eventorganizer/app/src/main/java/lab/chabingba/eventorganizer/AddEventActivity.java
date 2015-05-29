@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import java.util.AbstractList;
+import java.util.Calendar;
 
 import lab.chabingba.eventorganizer.Database.Category;
 import lab.chabingba.eventorganizer.Database.DBHandler;
@@ -70,8 +71,15 @@ public class AddEventActivity extends Activity {
 
         datePicker = (DatePicker) findViewById(R.id.datePicker);
 
+        Calendar currentDate = Calendar.getInstance();
+
+        datePicker.updateDate(currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DAY_OF_MONTH));
+
         timePicker = (TimePicker) findViewById(R.id.timePicker);
         timePicker.setIs24HourView(true);
+
+        timePicker.setCurrentHour(currentDate.get(Calendar.HOUR));
+        timePicker.setCurrentMinute(currentDate.get(Calendar.MINUTE));
 
         cbIsFinished = (CheckBox) findViewById(R.id.cbAddIsFinished);
     }

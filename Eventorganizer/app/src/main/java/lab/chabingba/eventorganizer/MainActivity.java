@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 
 import lab.chabingba.eventorganizer.Database.Category;
 import lab.chabingba.eventorganizer.Database.DBHandler;
+import lab.chabingba.eventorganizer.Database.EventOfCategory;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
@@ -29,10 +31,11 @@ import lab.chabingba.eventorganizer.Helpers.Visual.FlyInMenuContainer;
 
 
 public class MainActivity extends Activity {
+    private static final String TAG = "MainActivity";
+
     private ArrayList<Category> listOfCategories;
     private DBHandler database;
     private FlyInMenuContainer root;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,17 @@ public class MainActivity extends Activity {
                         break;
                     case 1:
                         Toast.makeText(MainActivity.this, "Force notifications", Toast.LENGTH_SHORT).show();
+
+                        EventOfCategory eventForToday = GeneralHelpers.checkForEventForToday(database, listOfCategories);
+
+                        if (eventForToday != null) {
+                            Log.i(TAG, "Found event for today.");
+                            if (!eventForToday.getEvent().getIsOld() && !eventForToday.getEvent().getHasNotification()) {
+                                GeneralHelpers.createNotification(getBaseContext(), eventForToday.getCategory(), eventForToday.getEvent());
+                            }
+                        } else {
+                            Log.i(TAG, "No event for today.");
+                        }
                         break;
                     case 2:
                         Toast.makeText(MainActivity.this, "About", Toast.LENGTH_SHORT).show();

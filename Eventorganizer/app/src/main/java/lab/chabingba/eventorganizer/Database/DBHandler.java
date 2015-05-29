@@ -21,24 +21,25 @@ import lab.chabingba.eventorganizer.Helpers.QueryHelpers;
 //DON'T forget to convert the table names except when passing to methods!!!
 
 public class DBHandler extends SQLiteOpenHelper {
+    private static final String TAG = "eventorganizer.Database";
 
     public DBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
-        Log.i("CTR", "Constructor passed.");
+        Log.i(TAG, "Constructor passed.");
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         String queryForCategoryTable = QueryHelpers.createQueryForCategoryTable(DatabaseConstants.CATEGORIES_TABLE_NAME);
-        Log.i("QUERY", queryForCategoryTable);
+        Log.i(TAG, queryForCategoryTable);
 
         db.execSQL(queryForCategoryTable);
 
         addCategory(db, DatabaseConstants.DEFAULT_EVENT_TABLE_NAME);
 
-        Log.i("CREATE", "ONCREATE completed.");
+        Log.i(TAG, "ONCREATE completed.");
 
-        Log.i("QUERY", DatabaseConstants.CREATE_EVENT_TYPES_TABLE);
+        Log.i(TAG, DatabaseConstants.CREATE_EVENT_TYPES_TABLE);
 
         db.execSQL(DatabaseConstants.CREATE_EVENT_TYPES_TABLE);
 
@@ -53,7 +54,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.i("SQL", "OnUpgrade method called");
+        Log.i(TAG, "OnUpgrade method called");
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseConstants.CATEGORIES_TABLE_NAME);
         onCreate(db);
     }
@@ -70,21 +71,21 @@ public class DBHandler extends SQLiteOpenHelper {
     private void addNewCategoryTable(SQLiteDatabase database, String tableName) {
         String query = QueryHelpers.createQueryForCategoryTable(tableName);
 
-        Log.i("QUERY", query);
+        Log.i(TAG, query);
 
         database.execSQL(query);
 
-        Log.i("TABLE", "Added new Table.");
+        Log.i(TAG, "Added new Table.");
     }
 
     private void addNewEventTable(SQLiteDatabase database, String tableName) {
         String query = QueryHelpers.createQueryForEventTable(tableName);
 
-        Log.i("QUERY", query);
+        Log.i(TAG, query);
 
         database.execSQL(query);
 
-        Log.i("TABLE", "Added new Table.");
+        Log.i(TAG, "Added new Table.");
     }
 
     private void removeTable(SQLiteDatabase database, String tableName) {
@@ -202,7 +203,7 @@ public class DBHandler extends SQLiteOpenHelper {
         //logAllTableNames(sqLiteDatabase);
 
         String query = QueryHelpers.createQueryForSelectingWholeTable(tableName);
-        Log.i("QUERY", query);
+        Log.i(TAG, query);
 
         Cursor cursor = sqLiteDatabase.rawQuery(query, null);
 
@@ -228,7 +229,7 @@ public class DBHandler extends SQLiteOpenHelper {
         ArrayList<String> arrTblNames = getAllTableNames(sqLiteDatabase);
 
         for (int i = 0; i < arrTblNames.size(); i++) {
-            Log.i("TABLE_NAME: ", arrTblNames.get(i));
+            Log.i(TAG, arrTblNames.get(i));
         }
     }
 
@@ -259,7 +260,7 @@ public class DBHandler extends SQLiteOpenHelper {
         }
 
         for (int i = 0; i < arrTblNames.size(); i++) {
-            Log.i("TABLE_NAME: ", arrTblNames.get(i));
+            Log.i(TAG, arrTblNames.get(i));
         }
 
         sqLiteDatabase.close();
@@ -375,9 +376,9 @@ public class DBHandler extends SQLiteOpenHelper {
         int result = database.update(tableToAddTo, eventAsContentValues, where, null);
 
         if (result == 0) {
-            Log.e("UPDATE_EVENT", "Error while updating event:\n" + editedEvent.toString());
+            Log.e(TAG, "Error while updating event:\n" + editedEvent.toString());
         } else {
-            Log.e("UPDATE_EVENT", "Successfully updated event.");
+            Log.e(TAG, "Successfully updated event.");
         }
     }
 }
