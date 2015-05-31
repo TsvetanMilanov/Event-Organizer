@@ -130,7 +130,7 @@ public class MainActivity extends Activity {
     public void onAddCategoryClicked(View v) {
         LayoutInflater li = LayoutInflater.from(this);
         View promptsView = li.inflate(R.layout.category_dialog, null);
-        promptsView.setBackgroundColor(Color.rgb(165, 165, 165));
+        //promptsView.setBackgroundColor(Color.rgb(165, 165, 165));
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 this);

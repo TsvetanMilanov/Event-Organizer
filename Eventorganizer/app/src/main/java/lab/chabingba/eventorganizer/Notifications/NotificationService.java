@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import lab.chabingba.eventorganizer.Database.Category;
 import lab.chabingba.eventorganizer.Database.DBHandler;
 import lab.chabingba.eventorganizer.Database.EventOfCategory;
+import lab.chabingba.eventorganizer.Database.MyEvent;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
 
@@ -37,12 +38,15 @@ public class NotificationService extends Service {
 
         ArrayList<Category> listOfCategories = database.createListWithCategoriesFromTable(DatabaseConstants.CATEGORIES_TABLE_NAME);
 
-        EventOfCategory eventForToday = GeneralHelpers.checkForEventForToday(database, listOfCategories);
+        EventOfCategory eventForTodayWithCategory = GeneralHelpers.checkForEventForToday(database, listOfCategories);
 
-        if (eventForToday != null) {
+        if (eventForTodayWithCategory != null) {
             Log.i(TAG, "Found event for today.");
-            if (!eventForToday.getEvent().getIsOld() && !eventForToday.getEvent().getHasNotification()) {
-                GeneralHelpers.createNotification(getBaseContext(), eventForToday.getCategory(), eventForToday.getEvent());
+            if (!eventForTodayWithCategory.getEvent().getIsOld() && !eventForTodayWithCategory.getEvent().getHasNotification()) {
+                GeneralHelpers.createNotification(getBaseContext(), eventForTodayWithCategory.getCategory(), eventForTodayWithCategory.getEvent());
+                MyEvent updatedEvent = eventForTodayWithCategory.getEvent();
+                updatedEvent.setHasNotification(true);
+                database.updateEvent(updatedEvent, eventForTodayWithCategory.getCategory().getSQLName());
             }
         } else {
             Log.i(TAG, "No event for today.");

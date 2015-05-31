@@ -2,6 +2,7 @@ package lab.chabingba.eventorganizer;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -16,6 +17,7 @@ import java.util.Calendar;
 
 import lab.chabingba.eventorganizer.Database.Category;
 import lab.chabingba.eventorganizer.Database.DBHandler;
+import lab.chabingba.eventorganizer.Database.EventOfCategory;
 import lab.chabingba.eventorganizer.Database.MyEvent;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
@@ -75,6 +77,10 @@ public class AddEventActivity extends Activity {
 
         datePicker.updateDate(currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DAY_OF_MONTH));
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            datePicker.setCalendarViewShown(false);
+        }
+
         timePicker = (TimePicker) findViewById(R.id.timePicker);
         timePicker.setIs24HourView(true);
 
@@ -90,7 +96,7 @@ public class AddEventActivity extends Activity {
         startActivity(intent);
         finish();
     }
-    
+
     public void onSaveClicked(View v) {
 
         eventType = (String) spinnerType.getSelectedItem();
@@ -119,5 +125,10 @@ public class AddEventActivity extends Activity {
 
         startActivity(intent);
         finish();
+    }
+
+    public void onAddEventTypeClicked(View view) {
+        EventOfCategory eventOfCategory = new EventOfCategory(this.category, this.eventToAdd);
+        GeneralHelpers.createAddNewEventTypeDialog(this, eventOfCategory);
     }
 }

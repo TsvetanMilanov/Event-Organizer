@@ -1,15 +1,21 @@
 package lab.chabingba.eventorganizer.Helpers;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,7 +28,6 @@ import lab.chabingba.eventorganizer.Database.EventOfCategory;
 import lab.chabingba.eventorganizer.Database.MyEvent;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
-import lab.chabingba.eventorganizer.Notifications.BootReceiver;
 import lab.chabingba.eventorganizer.Notifications.NotificationService;
 import lab.chabingba.eventorganizer.R;
 import lab.chabingba.eventorganizer.ViewEventActivity;
@@ -153,12 +158,14 @@ public final class GeneralHelpers {
         notification.setLatestEventInfo(context, category.getName() + " " + GlobalConstants.EVENT_WORD, event.getDescription(), pendingIntent);
 
         notification.sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                    /*
-                    //Uncomment for auto cancel the notification.
-                    notification.flags = notification.flags | notification.FLAG_AUTO_CANCEL;
-                    */
 
-        notificationManager.notify(1, notification);
+        // TODO: add option for auto-cancel event
+        /*
+          //Uncomment for auto cancel the notification.
+           notification.flags = notification.flags | notification.FLAG_AUTO_CANCEL;
+        */
+
+        notificationManager.notify(0, notification);
 
         Log.i(TAG, "Notification created");
     }
@@ -209,5 +216,55 @@ public final class GeneralHelpers {
         timeForNotification.set(Calendar.AM_PM, Calendar.AM);
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, timeForNotification.getTimeInMillis(), 1000 * 60 * 60 * 24, pendingIntent);
+    }
+
+    public static void createAddNewEventTypeDialog(final Context context, final EventOfCategory eventOfCategory) {
+        int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(context);
+
+        final DBHandler database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+
+        LayoutInflater li = LayoutInflater.from(context);
+        View promptsView = li.inflate(R.layout.add_event_type_dialog, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                context);
+
+        alertDialogBuilder.setView(promptsView);
+
+        final EditText userInput = (EditText) promptsView
+                .findViewById(R.id.etDialogEventType);
+
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton(GlobalConstants.DIALOG_SAVE_WORD,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                String eventTypeAsString = userInput.getText().toString();
+
+                                if (ValidatorHelpers.isNullOrEmpty(eventTypeAsString)) {
+                                    Toast.makeText(context, "The event type can't be empty.", Toast.LENGTH_LONG).show();
+                                } else {
+                                    database.addEventType(eventTypeAsString.trim());
+                                    Intent intent = new Intent(context, context.getClass());
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable(GlobalConstants.EVENT_WORD, eventOfCategory.getEvent());
+                                    bundle.putSerializable(GlobalConstants.CATEGORY_WORD, eventOfCategory.getCategory());
+
+                                    intent.putExtras(bundle);
+
+                                    context.startActivity(intent);
+                                }
+                            }
+                        })
+                .setNegativeButton(GlobalConstants.DIALOG_CANCEL_WORD,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        alertDialog.show();
     }
 }

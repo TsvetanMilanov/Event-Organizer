@@ -11,5 +11,8 @@ public class OptionsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.options_activity_layout);
+        // TODO: add preferences
+        // TODO: add remove old events in all categories
+        // TODO: add remove event type
     }
 }
