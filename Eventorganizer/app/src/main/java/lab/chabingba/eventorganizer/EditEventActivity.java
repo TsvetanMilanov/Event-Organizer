@@ -89,7 +89,7 @@ public class EditEventActivity extends Activity {
         timePicker = (TimePicker) findViewById(R.id.timePicker);
         timePicker.setIs24HourView(true);
 
-        int hour = currentEvent.getDate().get(Calendar.HOUR);
+        int hour = currentEvent.getDate().get(Calendar.HOUR_OF_DAY);
         int minute = currentEvent.getDate().get(Calendar.MINUTE);
 
         timePicker.setCurrentHour(hour);
@@ -114,7 +114,7 @@ public class EditEventActivity extends Activity {
 
         eventDescription = etDescription.getText().toString();
 
-        eventDateAndHour = datePicker.getYear() + "-" + datePicker.getMonth() + "-" + datePicker.getDayOfMonth() + " " + timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute() + ":" + "00";
+        eventDateAndHour = datePicker.getYear() + "-" + datePicker.getMonth() + 1 + "-" + datePicker.getDayOfMonth() + " " + timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute() + ":" + "00";
 
         isFinished = cbIsFinished.isChecked();
 

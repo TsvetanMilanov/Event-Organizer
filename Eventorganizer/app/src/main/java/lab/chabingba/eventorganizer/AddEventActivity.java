@@ -78,7 +78,7 @@ public class AddEventActivity extends Activity {
         timePicker = (TimePicker) findViewById(R.id.timePicker);
         timePicker.setIs24HourView(true);
 
-        timePicker.setCurrentHour(currentDate.get(Calendar.HOUR));
+        timePicker.setCurrentHour(currentDate.get(Calendar.HOUR_OF_DAY));
         timePicker.setCurrentMinute(currentDate.get(Calendar.MINUTE));
 
         cbIsFinished = (CheckBox) findViewById(R.id.cbAddIsFinished);
@@ -99,7 +99,7 @@ public class AddEventActivity extends Activity {
 
         eventDescription = etDescription.getText().toString();
 
-        eventDateAndHour = datePicker.getYear() + "-" + datePicker.getMonth() + "-" + datePicker.getDayOfMonth() + " " + timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute() + ":" + "00";
+        eventDateAndHour = datePicker.getYear() + "-" + datePicker.getMonth() + 1 + "-" + datePicker.getDayOfMonth() + " " + timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute() + ":" + "00";
 
         isFinished = cbIsFinished.isChecked();
 
