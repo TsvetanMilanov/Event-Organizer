@@ -90,7 +90,7 @@ public class AddEventActivity extends Activity {
         startActivity(intent);
         finish();
     }
-
+    
     public void onSaveClicked(View v) {
 
         eventType = (String) spinnerType.getSelectedItem();
@@ -99,7 +99,7 @@ public class AddEventActivity extends Activity {
 
         eventDescription = etDescription.getText().toString();
 
-        eventDateAndHour = datePicker.getYear() + "-" + datePicker.getMonth() + 1 + "-" + datePicker.getDayOfMonth() + " " + timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute() + ":" + "00";
+        eventDateAndHour = datePicker.getYear() + "-" + (datePicker.getMonth() + 1) + "-" + datePicker.getDayOfMonth() + " " + timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute() + ":" + "00";
 
         isFinished = cbIsFinished.isChecked();
 

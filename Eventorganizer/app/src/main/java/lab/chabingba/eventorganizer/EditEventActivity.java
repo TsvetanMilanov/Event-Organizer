@@ -114,7 +114,7 @@ public class EditEventActivity extends Activity {
 
         eventDescription = etDescription.getText().toString();
 
-        eventDateAndHour = datePicker.getYear() + "-" + datePicker.getMonth() + 1 + "-" + datePicker.getDayOfMonth() + " " + timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute() + ":" + "00";
+        eventDateAndHour = datePicker.getYear() + "-" + (datePicker.getMonth() + 1) + "-" + datePicker.getDayOfMonth() + " " + timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute() + ":" + "00";
 
         isFinished = cbIsFinished.isChecked();
 

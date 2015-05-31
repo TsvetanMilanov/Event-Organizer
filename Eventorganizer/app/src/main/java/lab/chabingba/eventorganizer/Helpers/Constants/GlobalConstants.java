@@ -27,6 +27,8 @@ public final class GlobalConstants {
     public static final String DIALOG_SAVE_WORD = "Save";
     public static final String DIALOG_DELETE_WORD = "Delete";
 
+    public static final String BOOT_RECEIVER_ACTION_NAME = ".Notifications.BootReceiver";
+
     public enum MenuState {
         OPEN, CLOSED, OPENING, CLOSING
     }

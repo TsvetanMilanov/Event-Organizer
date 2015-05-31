@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +19,6 @@ import java.util.ArrayList;
 
 import lab.chabingba.eventorganizer.Database.Category;
 import lab.chabingba.eventorganizer.Database.DBHandler;
-import lab.chabingba.eventorganizer.Database.EventOfCategory;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
@@ -70,16 +68,10 @@ public class MainActivity extends Activity {
                     case 1:
                         Toast.makeText(MainActivity.this, "Force notifications", Toast.LENGTH_SHORT).show();
 
-                        EventOfCategory eventForToday = GeneralHelpers.checkForEventForToday(database, listOfCategories);
+                        Intent broadcastForForceNotifications = new Intent();
+                        broadcastForForceNotifications.setAction(GlobalConstants.BOOT_RECEIVER_ACTION_NAME);
 
-                        if (eventForToday != null) {
-                            Log.i(TAG, "Found event for today.");
-                            if (!eventForToday.getEvent().getIsOld() && !eventForToday.getEvent().getHasNotification()) {
-                                GeneralHelpers.createNotification(getBaseContext(), eventForToday.getCategory(), eventForToday.getEvent());
-                            }
-                        } else {
-                            Log.i(TAG, "No event for today.");
-                        }
+                        MainActivity.this.sendBroadcast(broadcastForForceNotifications);
                         break;
                     case 2:
                         Toast.makeText(MainActivity.this, "About", Toast.LENGTH_SHORT).show();

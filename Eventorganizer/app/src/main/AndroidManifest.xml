@@ -68,14 +68,15 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".Notifications.BootReceiver">
+        <receiver android:name="lab.chabingba.eventorganizer.Notifications.BootReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name=".Notifications.BootReceiver" />
             </intent-filter>
         </receiver>
 
         <service
-            android:name=".Notifications.NotificationService"
+            android:name="lab.chabingba.eventorganizer.Notifications.NotificationService"
             android:enabled="true"></service>
     </application>
 

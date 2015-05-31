@@ -17,7 +17,7 @@ import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
  * Created by Tsvetan on 2015-05-29.
  */
 public class NotificationService extends Service {
-    private static final String TAG = "eventorganizer";
+    private static final String TAG = "NotificationService";
 
     public NotificationService() {
     }

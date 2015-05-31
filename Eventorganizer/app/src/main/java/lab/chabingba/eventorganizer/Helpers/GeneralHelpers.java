@@ -1,5 +1,6 @@
 package lab.chabingba.eventorganizer.Helpers;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -39,12 +40,15 @@ public final class GeneralHelpers {
         boolean isFirstRun = settings.getBoolean(GlobalConstants.FIRST_APP_RUN_VARIABLE, true);
 
         if (isFirstRun) {
+            Log.i(TAG, "App ran for the first time.");
+
             settingsEditor.putInt(DatabaseConstants.DATABASE_VERSION_VARIABLE, DatabaseConstants.DATABASE_DEFAULT_VERSION);
             settingsEditor.putBoolean(GlobalConstants.FIRST_APP_RUN_VARIABLE, false);
 
-            Intent intent = new Intent(context, BootReceiver.class);
+            Intent intent = new Intent();
+            intent.setAction(GlobalConstants.BOOT_RECEIVER_ACTION_NAME);
 
-            context.startService(intent);
+            context.sendBroadcast(intent);
 
             settingsEditor.commit();
         }
@@ -188,5 +192,22 @@ public final class GeneralHelpers {
         }
         Log.i(TAG, "No event.");
         return null;
+    }
+
+    public static void createAlarmManager(Context context) {
+        Intent myIntent = new Intent(context, NotificationService.class);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Calendar timeForNotification = Calendar.getInstance();
+
+        timeForNotification.set(Calendar.SECOND, 0);
+        timeForNotification.set(Calendar.MINUTE, 0);
+        timeForNotification.set(Calendar.HOUR, 10);
+        timeForNotification.set(Calendar.AM_PM, Calendar.AM);
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, timeForNotification.getTimeInMillis(), 1000 * 60 * 60 * 24, pendingIntent);
     }
 }
