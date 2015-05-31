@@ -1,5 +1,6 @@
 package lab.chabingba.eventorganizer.Helpers;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -253,6 +254,8 @@ public final class GeneralHelpers {
                                     intent.putExtras(bundle);
 
                                     context.startActivity(intent);
+
+                                    ((Activity) context).finish();
                                 }
                             }
                         })

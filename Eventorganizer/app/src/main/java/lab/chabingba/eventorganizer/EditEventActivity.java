@@ -22,7 +22,7 @@ import lab.chabingba.eventorganizer.Database.MyEvent;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
-import lab.chabingba.eventorganizer.Helpers.Visual.CustomSpinnerItem;
+import lab.chabingba.eventorganizer.Visual.CustomSpinnerItem;
 
 /**
  * Created by Tsvetan on 2015-05-27.

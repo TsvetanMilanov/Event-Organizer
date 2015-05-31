@@ -18,7 +18,7 @@ import lab.chabingba.eventorganizer.Database.MyEvent;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
-import lab.chabingba.eventorganizer.Helpers.Visual.CustomExpandableListAdapter;
+import lab.chabingba.eventorganizer.Visual.CustomExpandableListAdapter;
 
 /**
  * Created by Tsvetan on 2015-05-26.
@@ -65,7 +65,7 @@ public class CurrentEventsActivity extends ExpandableListActivity {
         //endregion
 
         expandableListView = (ExpandableListView) findViewById(android.R.id.list);
-        expandableListView.setAdapter(new CustomExpandableListAdapter(this, listOfEvents));
+        expandableListView.setAdapter(new CustomExpandableListAdapter(this, listOfEvents, category));
 
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override

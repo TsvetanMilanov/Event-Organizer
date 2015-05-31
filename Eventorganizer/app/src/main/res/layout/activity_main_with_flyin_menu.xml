@@ -1,4 +1,4 @@
-<lab.chabingba.eventorganizer.Helpers.Visual.FlyInMenuContainer xmlns:android="http://schemas.android.com/apk/res/android"
+<lab.chabingba.eventorganizer.Visual.FlyInMenuContainer xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -124,4 +124,4 @@
         </RelativeLayout>
     </LinearLayout>
 
-</lab.chabingba.eventorganizer.Helpers.Visual.FlyInMenuContainer>
+</lab.chabingba.eventorganizer.Visual.FlyInMenuContainer>

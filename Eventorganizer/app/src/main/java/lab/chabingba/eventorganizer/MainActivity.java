@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -23,9 +22,9 @@ import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
 import lab.chabingba.eventorganizer.Helpers.ValidatorHelpers;
-import lab.chabingba.eventorganizer.Helpers.Visual.CustomAdapterForCategories;
-import lab.chabingba.eventorganizer.Helpers.Visual.CustomAdapterForOptionsMenu;
-import lab.chabingba.eventorganizer.Helpers.Visual.FlyInMenuContainer;
+import lab.chabingba.eventorganizer.Visual.CustomAdapterForCategories;
+import lab.chabingba.eventorganizer.Visual.CustomAdapterForOptionsMenu;
+import lab.chabingba.eventorganizer.Visual.FlyInMenuContainer;
 
 
 public class MainActivity extends Activity {

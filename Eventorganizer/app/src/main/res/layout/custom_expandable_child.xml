@@ -7,9 +7,49 @@
     android:paddingRight="10dp">
 
     <TableRow
+        android:id="@+id/tableRowEditPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:id="@+id/imageButtonEditEvent"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/button_edit_black"
+                android:layout_marginLeft="5dp" />
+
+            <ImageButton
+                android:id="@+id/imageButtonDeleteEvent"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/delete_button_black"
+                android:layout_marginRight="5dp" />
+        </RelativeLayout>
+    </TableRow>
+
+    <View
+        android:id="@+id/zeroSeparator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tableRowEditPanel"
+        android:background="#ff878787"></View>
+
+    <TableRow
         android:id="@+id/tableRow2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/tableRowEditPanel"
         android:padding="5dp">
 
         <RelativeLayout
