@@ -122,10 +122,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
         if (currentEvent.getIsOld() == true) {
             imageButtonEditEvent.setVisibility(View.GONE);
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                    45,
-                    45
-            );
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(45, 45);
             params.setMargins(5, 0, 0, 0);
             imageButtonViewEvent.setLayoutParams(params);
             imageButtonViewEvent.invalidate();

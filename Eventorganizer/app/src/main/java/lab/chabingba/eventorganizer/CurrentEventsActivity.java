@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -62,18 +63,30 @@ public class CurrentEventsActivity extends ExpandableListActivity {
         if (loadOldEvents == true) {
             listOfEvents = GeneralHelpers.selectOldEvents(database.createListWithEventsFromTable(tableName));
             tvCategoryName.append(GlobalConstants.OLD_EVENTS_TEXT_TO_APPEND);
+
             ImageButton imageButtonAdd = (ImageButton) findViewById(R.id.imageButtonAddEvent);
             imageButtonAdd.setVisibility(View.GONE);
+
             ImageButton imageButtonOldEvents = (ImageButton) findViewById(R.id.imageButtonOldEvents);
             imageButtonOldEvents.setVisibility(View.GONE);
+
+            ImageButton imageButtonRemoveEvents = (ImageButton) findViewById(R.id.imageButtonRemoveEvent);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(45, 45);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            layoutParams.setMargins(50, 0, 0, 0);
+            imageButtonRemoveEvents.setLayoutParams(layoutParams);
+
             tvCategoryName.setPadding(0, 0, GlobalConstants.CATEGORY_TEXT_VIEW_PADDING_RIGHT, 0);
         } else if (loadTodayEvents) {
             listOfEvents = GeneralHelpers.createListOfEventsFromEventOfCategoryArray(listOfEventsForNotification);
             tvCategoryName.setText("Events for today");
+
             ImageButton imageButtonAdd = (ImageButton) findViewById(R.id.imageButtonAddEvent);
             imageButtonAdd.setVisibility(View.GONE);
+
             ImageButton imageButtonOldEvents = (ImageButton) findViewById(R.id.imageButtonOldEvents);
             imageButtonOldEvents.setVisibility(View.GONE);
+
             ImageButton imageButtonRemoveEvents = (ImageButton) findViewById(R.id.imageButtonRemoveEvent);
             imageButtonRemoveEvents.setVisibility(View.GONE);
         } else {

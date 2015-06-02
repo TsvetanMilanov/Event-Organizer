@@ -32,7 +32,6 @@ import lab.chabingba.eventorganizer.Visual.FlyInMenuContainer;
 
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
-    // TODO: COMMIT TO GITHUB!!!
 
     private ArrayList<Category> listOfCategories;
     private DBHandler database;
