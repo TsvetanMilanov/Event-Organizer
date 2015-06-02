@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import lab.chabingba.eventorganizer.Database.Category;
@@ -91,7 +92,7 @@ public class AddEventActivity extends Activity {
     }
 
     public void onCancelClicked(View v) {
-        Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(AddEventActivity.this, this.category, false);
+        Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(AddEventActivity.this, this.category, false, new ArrayList<EventOfCategory>(0), false);
 
         startActivity(intent);
         finish();
@@ -113,7 +114,7 @@ public class AddEventActivity extends Activity {
 
         this.database.addEvent(eventToAdd, this.tableToAddTo);
 
-        Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(AddEventActivity.this, this.category, false);
+        Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(AddEventActivity.this, this.category, false, new ArrayList<EventOfCategory>(0), false);
 
         startActivity(intent);
         finish();
@@ -121,7 +122,7 @@ public class AddEventActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(AddEventActivity.this, this.category, false);
+        Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(AddEventActivity.this, this.category, false, new ArrayList<EventOfCategory>(0), false);
 
         startActivity(intent);
         finish();

@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,17 +20,19 @@ import java.util.ArrayList;
 
 import lab.chabingba.eventorganizer.Database.Category;
 import lab.chabingba.eventorganizer.Database.DBHandler;
+import lab.chabingba.eventorganizer.Database.EventOfCategory;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
 import lab.chabingba.eventorganizer.Helpers.ValidatorHelpers;
-import lab.chabingba.eventorganizer.Visual.CustomAdapterForCategories;
-import lab.chabingba.eventorganizer.Visual.CustomAdapterForOptionsMenu;
+import lab.chabingba.eventorganizer.Visual.CustomAdapterRows.CustomAdapterForCategories;
+import lab.chabingba.eventorganizer.Visual.CustomAdapterRows.CustomAdapterForOptionsMenu;
 import lab.chabingba.eventorganizer.Visual.FlyInMenuContainer;
 
 
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
+    // TODO: COMMIT TO GITHUB!!!
 
     private ArrayList<Category> listOfCategories;
     private DBHandler database;
@@ -46,6 +50,13 @@ public class MainActivity extends Activity {
         int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(this);
 
         database = new DBHandler(this, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        boolean autoCleanOldEvents = preferences.getBoolean("cbpAutoRemoveOldEvents", true);
+
+        if (autoCleanOldEvents) {
+            GeneralHelpers.removeOldEvents(database);
+        }
 
         //region Create listViewForMenu
         ListView listViewForMenu = (ListView) this.findViewById(R.id.lvOptions);
@@ -65,8 +76,6 @@ public class MainActivity extends Activity {
                         startActivity(intent);
                         break;
                     case 1:
-                        Toast.makeText(MainActivity.this, "Force notifications", Toast.LENGTH_SHORT).show();
-
                         Intent broadcastForForceNotifications = new Intent();
                         broadcastForForceNotifications.setAction(GlobalConstants.BOOT_RECEIVER_ACTION_NAME);
 
@@ -96,7 +105,7 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intentForCurrentEventsActivity = GeneralHelpers.
-                        createIntentForCurrentEventsActivity(MainActivity.this, MainActivity.this.listOfCategories.get(position), false);
+                        createIntentForCurrentEventsActivity(MainActivity.this, MainActivity.this.listOfCategories.get(position), false, new ArrayList<EventOfCategory>(0), false);
 
                 startActivity(intentForCurrentEventsActivity);
             }

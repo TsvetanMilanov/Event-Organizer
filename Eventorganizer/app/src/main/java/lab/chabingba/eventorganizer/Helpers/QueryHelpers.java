@@ -73,4 +73,12 @@ public final class QueryHelpers {
 
         return result;
     }
+
+    public static String createQueryForMovingEventToAnotherTable(String oldTableName, String newTableName, int eventID) {
+        String result = "";
+
+        result += DatabaseConstants.MOVE_EVENT_QUERY_START + newTableName + DatabaseConstants.MOVE_EVENT_QUERY_MIDDLE + oldTableName + DatabaseConstants.MOVE_EVENT_QUERY_END + String.valueOf(eventID) + ";";
+
+        return result;
+    }
 }

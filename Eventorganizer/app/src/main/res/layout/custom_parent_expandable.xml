@@ -20,15 +20,22 @@
                 android:layout_alignParentStart="true"
                 android:src="@drawable/arrow_right_light_grey" />
 
-            <TextView
-                android:layout_width="140dp"
+            <RelativeLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Text box"
-                android:id="@+id/tvEventType"
-                android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/tvDateOfEvent"
-                android:layout_toStartOf="@+id/tvDateOfEvent" />
+                android:layout_toRightOf="@+id/ivExpandableListIcon"
+                android:layout_toEndOf="@+id/ivExpandableListIcon"
+                android:layout_marginLeft="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Text box"
+                    android:id="@+id/tvEventType"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"

@@ -243,6 +243,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 c.moveToNext();
             }
         }
+        c.close();
 
         return arrTblNames;
     }
@@ -330,7 +331,17 @@ public class DBHandler extends SQLiteOpenHelper {
         contentValues.put(DatabaseConstants.TYPE_FIELD_TYPE, type);
 
         database.insert(QueryHelpers.convertTableNameToSQLConvention(DatabaseConstants.EVENT_TYPE_TABLE_NAME), null, contentValues);
+    }
 
+    public void removeEventType(String type) {
+        SQLiteDatabase database = getWritableDatabase();
+
+        String query = QueryHelpers.createQueryForDeletingRow(DatabaseConstants.EVENT_TYPE_TABLE_NAME, DatabaseConstants.TYPE_FIELD_TYPE, type);
+
+        database.execSQL(query);
+
+        removeTable(type);
+        database.close();
     }
 
     public ArrayList<String> getEventTypesAsArray() {
@@ -378,7 +389,28 @@ public class DBHandler extends SQLiteOpenHelper {
         if (result == 0) {
             Log.e(TAG, "Error while updating event:\n" + editedEvent.toString());
         } else {
-            Log.e(TAG, "Successfully updated event.");
+            Log.i(TAG, "Successfully updated event.");
         }
+        database.close();
+    }
+
+    public void moveEvent(MyEvent eventToMove, Category oldCategory, Category newCategory) {
+        String oldTableName = oldCategory.getSQLName();
+        String newTableName = newCategory.getSQLName();
+
+        if (oldTableName.equals(newTableName)) {
+            return;
+        }
+
+        String moveQuery = QueryHelpers.createQueryForMovingEventToAnotherTable(oldTableName, newTableName, eventToMove.getId());
+        Log.d(TAG, moveQuery);
+
+        String removeQuery = QueryHelpers.createQueryForDeletingRow(oldTableName, DatabaseConstants.EVENT_FIELD_ID, eventToMove.getId());
+        Log.d(TAG, removeQuery);
+
+        SQLiteDatabase database = getWritableDatabase();
+        database.execSQL(moveQuery);
+        database.execSQL(removeQuery);
+        database.close();
     }
 }

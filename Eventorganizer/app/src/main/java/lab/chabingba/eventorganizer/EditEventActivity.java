@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import lab.chabingba.eventorganizer.Database.Category;
@@ -106,7 +107,7 @@ public class EditEventActivity extends Activity {
     }
 
     public void onCancelClicked(View v) {
-        Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(EditEventActivity.this, this.category, false);
+        Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(EditEventActivity.this, this.category, false, new ArrayList<EventOfCategory>(0), false);
 
         startActivity(intent);
         finish();
@@ -128,7 +129,7 @@ public class EditEventActivity extends Activity {
 
         database.updateEvent(editedEvent, tableToAddTo);
 
-        Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(EditEventActivity.this, this.category, editedEvent.getIsOld());
+        Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(EditEventActivity.this, this.category, editedEvent.getIsOld(), new ArrayList<EventOfCategory>(0), false);
 
         startActivity(intent);
         finish();
@@ -136,7 +137,7 @@ public class EditEventActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(EditEventActivity.this, this.category, this.currentEvent.getIsOld());
+        Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(EditEventActivity.this, this.category, this.currentEvent.getIsOld(), new ArrayList<EventOfCategory>(0), false);
 
         startActivity(intent);
         finish();

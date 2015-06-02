@@ -21,11 +21,15 @@ public final class GlobalConstants {
 
     public static final String CATEGORY_WORD = "Category";
     public static final String LOAD_OLD_EVENTS_TEXT = "LoadOldEvents";
+    public static final String LOAD_TODAYS_EVENTS_TEXT = "LoadTodaysEvents";
+    public static final String EVENTS_FOR_NOTIFICATION_TEXT = "EventsForNotification";
+    public static final String BASE_RETURN = "BaseReturn";
     public static final String OLD_EVENTS_TEXT_TO_APPEND = " - Old Events";
     public static final String EVENT_WORD = "Event";
     public static final String DIALOG_CANCEL_WORD = "Cancel";
     public static final String DIALOG_SAVE_WORD = "Save";
     public static final String DIALOG_DELETE_WORD = "Delete";
+    public static final String EVENT_OF_CATEGORY_WORD = "EventOfCategory";
 
     public static final String BOOT_RECEIVER_ACTION_NAME = ".Notifications.BootReceiver";
 

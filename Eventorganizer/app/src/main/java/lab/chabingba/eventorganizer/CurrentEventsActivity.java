@@ -14,11 +14,12 @@ import java.util.ArrayList;
 
 import lab.chabingba.eventorganizer.Database.Category;
 import lab.chabingba.eventorganizer.Database.DBHandler;
+import lab.chabingba.eventorganizer.Database.EventOfCategory;
 import lab.chabingba.eventorganizer.Database.MyEvent;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
-import lab.chabingba.eventorganizer.Visual.CustomExpandableListAdapter;
+import lab.chabingba.eventorganizer.Visual.CustomExpandableListAdapters.CustomExpandableListAdapter;
 
 /**
  * Created by Tsvetan on 2015-05-26.
@@ -30,6 +31,8 @@ public class CurrentEventsActivity extends ExpandableListActivity {
     private String tableName = GlobalConstants.EMPTY_STRING;
     private Category category;
     private boolean loadOldEvents;
+    private ArrayList<EventOfCategory> listOfEventsForNotification;
+    private boolean loadTodayEvents;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +52,13 @@ public class CurrentEventsActivity extends ExpandableListActivity {
         tvCategoryName.setText(category.getName());
 
         loadOldEvents = getIntent().getBooleanExtra(GlobalConstants.LOAD_OLD_EVENTS_TEXT, false);
+        loadTodayEvents = getIntent().getBooleanExtra(GlobalConstants.LOAD_TODAYS_EVENTS_TEXT, false);
 
-        //region settings for old events
+        listOfEventsForNotification = (ArrayList<EventOfCategory>) getIntent().getSerializableExtra(GlobalConstants.EVENTS_FOR_NOTIFICATION_TEXT);
+
+        expandableListView = (ExpandableListView) findViewById(android.R.id.list);
+
+        //region settings for which events to load
         if (loadOldEvents == true) {
             listOfEvents = GeneralHelpers.selectOldEvents(database.createListWithEventsFromTable(tableName));
             tvCategoryName.append(GlobalConstants.OLD_EVENTS_TEXT_TO_APPEND);
@@ -59,30 +67,26 @@ public class CurrentEventsActivity extends ExpandableListActivity {
             ImageButton imageButtonOldEvents = (ImageButton) findViewById(R.id.imageButtonOldEvents);
             imageButtonOldEvents.setVisibility(View.GONE);
             tvCategoryName.setPadding(0, 0, GlobalConstants.CATEGORY_TEXT_VIEW_PADDING_RIGHT, 0);
+        } else if (loadTodayEvents) {
+            listOfEvents = GeneralHelpers.createListOfEventsFromEventOfCategoryArray(listOfEventsForNotification);
+            tvCategoryName.setText("Events for today");
+            ImageButton imageButtonAdd = (ImageButton) findViewById(R.id.imageButtonAddEvent);
+            imageButtonAdd.setVisibility(View.GONE);
+            ImageButton imageButtonOldEvents = (ImageButton) findViewById(R.id.imageButtonOldEvents);
+            imageButtonOldEvents.setVisibility(View.GONE);
+            ImageButton imageButtonRemoveEvents = (ImageButton) findViewById(R.id.imageButtonRemoveEvent);
+            imageButtonRemoveEvents.setVisibility(View.GONE);
         } else {
             listOfEvents = GeneralHelpers.selectCurrentEvents(database.createListWithEventsFromTable(tableName));
         }
         //endregion
 
-        expandableListView = (ExpandableListView) findViewById(android.R.id.list);
-        expandableListView.setAdapter(new CustomExpandableListAdapter(this, listOfEvents, category));
-
-        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Intent intent = new Intent(CurrentEventsActivity.this, EditEventActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(GlobalConstants.EVENT_WORD, CurrentEventsActivity.this.listOfEvents.get(groupPosition));
-                bundle.putSerializable(GlobalConstants.CATEGORY_WORD, CurrentEventsActivity.this.category);
-
-                intent.putExtras(bundle);
-
-                startActivity(intent);
-                finish();
-                return false;
-            }
-        });
-
+        if (listOfEventsForNotification.size() > 0) {
+            expandableListView.setAdapter(new CustomExpandableListAdapter(this, listOfEventsForNotification, category));
+        } else {
+            ArrayList<EventOfCategory> listOfEventsOfOneCategory = GeneralHelpers.createListWithEventsOfCategory(listOfEvents, category);
+            expandableListView.setAdapter(new CustomExpandableListAdapter(this, listOfEventsOfOneCategory, category));
+        }
     }
 
     public void onAddEventClicked(View v) {
@@ -98,7 +102,7 @@ public class CurrentEventsActivity extends ExpandableListActivity {
     }
 
     public void onOldEventsClicked(View v) {
-        Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(this, this.category, true);
+        Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(this, this.category, true, new ArrayList<EventOfCategory>(0), false);
 
         startActivity(intent);
         finish();
@@ -137,7 +141,7 @@ public class CurrentEventsActivity extends ExpandableListActivity {
                         if (selectedEvents.size() > 0) {
                             Intent intent = GeneralHelpers
                                     .createIntentForCurrentEventsActivity(CurrentEventsActivity.this,
-                                            CurrentEventsActivity.this.category, false);
+                                            CurrentEventsActivity.this.category, false, new ArrayList<EventOfCategory>(0), false);
 
                             startActivity(intent);
                             finish();
@@ -158,11 +162,12 @@ public class CurrentEventsActivity extends ExpandableListActivity {
     @Override
     public void onBackPressed() {
         if (this.loadOldEvents == true) {
-            Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(CurrentEventsActivity.this, this.category, false);
+            Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(CurrentEventsActivity.this, this.category, false, new ArrayList<EventOfCategory>(0), false);
             startActivity(intent);
             finish();
         } else {
             super.onBackPressed();
         }
     }
+
 }

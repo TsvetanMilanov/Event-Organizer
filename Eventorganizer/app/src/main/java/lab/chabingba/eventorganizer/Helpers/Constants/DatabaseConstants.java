@@ -52,4 +52,8 @@ public final class DatabaseConstants {
     public static final String TYPE_FIELD_TYPE = "type";
 
     public static final String EVENT_TYPE_TABLE_NAME = "Event types";
+
+    public static final String MOVE_EVENT_QUERY_START = "INSERT INTO ";
+    public static final String MOVE_EVENT_QUERY_MIDDLE = " SELECT * FROM ";
+    public static final String MOVE_EVENT_QUERY_END = " WHERE _id = ";
 }

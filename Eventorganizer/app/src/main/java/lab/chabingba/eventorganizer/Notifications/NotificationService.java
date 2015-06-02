@@ -4,13 +4,13 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import lab.chabingba.eventorganizer.Database.Category;
 import lab.chabingba.eventorganizer.Database.DBHandler;
 import lab.chabingba.eventorganizer.Database.EventOfCategory;
-import lab.chabingba.eventorganizer.Database.MyEvent;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
 
@@ -38,17 +38,18 @@ public class NotificationService extends Service {
 
         ArrayList<Category> listOfCategories = database.createListWithCategoriesFromTable(DatabaseConstants.CATEGORIES_TABLE_NAME);
 
-        EventOfCategory eventForTodayWithCategory = GeneralHelpers.checkForEventForToday(database, listOfCategories);
+        ArrayList<EventOfCategory> listOfEventsForToday = GeneralHelpers.checkForEventForToday(database, listOfCategories);
 
-        if (eventForTodayWithCategory != null) {
-            Log.i(TAG, "Found event for today.");
-            if (!eventForTodayWithCategory.getEvent().getIsOld() && !eventForTodayWithCategory.getEvent().getHasNotification()) {
-                GeneralHelpers.createNotification(getBaseContext(), eventForTodayWithCategory.getCategory(), eventForTodayWithCategory.getEvent());
-                MyEvent updatedEvent = eventForTodayWithCategory.getEvent();
-                updatedEvent.setHasNotification(true);
-                database.updateEvent(updatedEvent, eventForTodayWithCategory.getCategory().getSQLName());
-            }
+        ArrayList<EventOfCategory> listOfEventsForNotification = GeneralHelpers.removeEventsWithNotifications(listOfEventsForToday);
+
+        if (listOfEventsForNotification.size() > 0) {
+            Log.i(TAG, "Found event/s for today.");
+
+            GeneralHelpers.createNotification(getBaseContext(), listOfEventsForNotification);
+
+            Log.i(TAG, "Created notification");
         } else {
+            Toast.makeText(getBaseContext(), "No events for today", Toast.LENGTH_LONG).show();
             Log.i(TAG, "No event for today.");
         }
 

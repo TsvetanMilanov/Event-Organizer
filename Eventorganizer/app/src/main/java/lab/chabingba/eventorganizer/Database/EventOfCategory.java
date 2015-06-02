@@ -1,9 +1,11 @@
 package lab.chabingba.eventorganizer.Database;
 
+import java.io.Serializable;
+
 /**
  * Created by Tsvetan on 2015-05-29.
  */
-public class EventOfCategory {
+public class EventOfCategory implements Serializable {
     private MyEvent event;
     private Category category;
 

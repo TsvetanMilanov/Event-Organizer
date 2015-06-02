@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +32,6 @@ import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 import lab.chabingba.eventorganizer.Notifications.NotificationService;
 import lab.chabingba.eventorganizer.R;
-import lab.chabingba.eventorganizer.ViewEventActivity;
 
 /**
  * Created by Tsvetan on 2015-05-25.
@@ -87,6 +87,16 @@ public final class GeneralHelpers {
         return result;
     }
 
+    public static String[] createStringArrayWithEventTypes(ArrayList<String> listOfTypes) {
+        String[] result = new String[listOfTypes.size()];
+
+        for (int i = 0; i < listOfTypes.size(); i++) {
+            result[i] = listOfTypes.get(i);
+        }
+
+        return result;
+    }
+
     public static ArrayList<MyEvent> selectCurrentEvents(ArrayList<MyEvent> listWithEventsFromTable) {
         ArrayList<MyEvent> result = new ArrayList<>();
 
@@ -124,12 +134,14 @@ public final class GeneralHelpers {
         return result;
     }
 
-    public static Intent createIntentForCurrentEventsActivity(Context context, Category category, boolean loadOldEvents) {
+    public static Intent createIntentForCurrentEventsActivity(Context context, Category category, boolean loadOldEvents, ArrayList<EventOfCategory> listOfEventsForNotification, boolean loadTodayEvents) {
         Intent result = new Intent(context, CurrentEventsActivity.class);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(GlobalConstants.CATEGORY_WORD, category);
         bundle.putBoolean(GlobalConstants.LOAD_OLD_EVENTS_TEXT, loadOldEvents);
+        bundle.putBoolean(GlobalConstants.LOAD_TODAYS_EVENTS_TEXT, loadTodayEvents);
+        bundle.putSerializable(GlobalConstants.EVENTS_FOR_NOTIFICATION_TEXT, listOfEventsForNotification);
 
         result.putExtras(bundle);
 
@@ -142,36 +154,34 @@ public final class GeneralHelpers {
         context.startService(intent);
     }
 
-    public static void createNotification(Context context, Category category, MyEvent event) {
-        Intent intentForEdit = new Intent(context, ViewEventActivity.class);
+    public static void createNotification(Context context, ArrayList<EventOfCategory> listOfEventsForNotification) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-        Bundle bundle = new Bundle();
+        boolean autoCancel = preferences.getBoolean("cbpAutoCancelNotifications", true);
 
-        bundle.putSerializable(GlobalConstants.CATEGORY_WORD, category);
-        bundle.putSerializable(GlobalConstants.EVENT_WORD, event);
+        Intent intentForEdit = GeneralHelpers.createIntentForCurrentEventsActivity(context, listOfEventsForNotification.get(0).getCategory(), false, listOfEventsForNotification, true);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intentForEdit, 0);
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Notification notification = new Notification(R.drawable.icon, category.getName(), event.getDate().getTimeInMillis());
+        Notification notification = new Notification(R.drawable.icon, "There are events for today", Calendar.getInstance().getTimeInMillis());
 
-        notification.setLatestEventInfo(context, category.getName() + " " + GlobalConstants.EVENT_WORD, event.getDescription(), pendingIntent);
+        notification.setLatestEventInfo(context, "There are events for today", "Click to see the events.", pendingIntent);
 
         notification.sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        // TODO: add option for auto-cancel event
-        /*
-          //Uncomment for auto cancel the notification.
-           notification.flags = notification.flags | notification.FLAG_AUTO_CANCEL;
-        */
+        if (autoCancel) {
+            notification.flags = notification.flags | notification.FLAG_AUTO_CANCEL;
+        }
 
-        notificationManager.notify(0, notification);
+        notificationManager.notify(1, notification);
 
         Log.i(TAG, "Notification created");
     }
 
-    public static EventOfCategory checkForEventForToday(DBHandler database, ArrayList<Category> listOfCategories) {
+    public static ArrayList<EventOfCategory> checkForEventForToday(DBHandler database, ArrayList<Category> listOfCategories) {
+        ArrayList<EventOfCategory> result = new ArrayList<>();
         Calendar currentDate = Calendar.getInstance();
 
         for (int i = 0; i < listOfCategories.size(); i++) {
@@ -183,10 +193,9 @@ public final class GeneralHelpers {
             for (int j = 0; j < listOfEvents.size(); j++) {
                 MyEvent currentEvent = listOfEvents.get(j);
 
-                if (currentEvent.getIsOld()) {
+                if (currentEvent.getIsOld() || currentEvent.getHasNotification()) {
                     continue;
                 }
-
 
                 Calendar eventsDate = currentEvent.getDate();
 
@@ -194,15 +203,63 @@ public final class GeneralHelpers {
                         && eventsDate.get(Calendar.MONTH) == currentDate.get(Calendar.MONTH)
                         && eventsDate.get(Calendar.DAY_OF_MONTH) == currentDate.get(Calendar.DAY_OF_MONTH)) {
                     Log.i(TAG, "Found event.");
-                    return new EventOfCategory(currentCategory, currentEvent);
+
+                    result.add(new EventOfCategory(currentCategory, currentEvent));
                 }
             }
         }
         Log.i(TAG, "No event.");
-        return null;
+        return result;
+    }
+
+    public static ArrayList<EventOfCategory> removeEventsWithNotifications(ArrayList<EventOfCategory> listOfEventsForToday) {
+        ArrayList<EventOfCategory> result = GeneralHelpers.copyOfArray(listOfEventsForToday);
+
+        for (int i = 0; i < result.size(); i++) {
+            if (result.get(i).getEvent().getHasNotification() || result.get(i).getEvent().getIsOld() || result.get(i).getEvent().getIsFinished()) {
+                result.remove(i);
+            }
+        }
+
+        return result;
     }
 
     public static void createAlarmManager(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        String notificationsInterval = preferences.getString("notificationInterval", "86400000");
+
+        long notificationInterval = 0;
+
+        switch (notificationsInterval) {
+            case "86400000":
+                notificationInterval = 86400000;
+                break;
+            case "43200000":
+                notificationInterval = 43200000;
+                break;
+            case "21600000":
+                notificationInterval = 21600000;
+                break;
+            case "3600000":
+                notificationInterval = 3600000;
+                break;
+            case "1800000":
+                notificationInterval = 1800000;
+                break;
+            case "300000":
+                notificationInterval = 300000;
+                break;
+            default:
+                notificationInterval = 86400000;
+                break;
+        }
+
+        String hourAsString = preferences.getString("prefTimePicker", "10:00");
+
+        int hour = Integer.parseInt(hourAsString.split(":")[0]);
+        int minutes = Integer.parseInt(hourAsString.split(":")[1]);
+
         Intent myIntent = new Intent(context, NotificationService.class);
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -212,11 +269,17 @@ public final class GeneralHelpers {
         Calendar timeForNotification = Calendar.getInstance();
 
         timeForNotification.set(Calendar.SECOND, 0);
-        timeForNotification.set(Calendar.MINUTE, 0);
-        timeForNotification.set(Calendar.HOUR, 10);
-        timeForNotification.set(Calendar.AM_PM, Calendar.AM);
+        timeForNotification.set(Calendar.MINUTE, minutes);
+        timeForNotification.set(Calendar.HOUR, hour);
 
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, timeForNotification.getTimeInMillis(), 1000 * 60 * 60 * 24, pendingIntent);
+        // TODO: check with hour > 12 to test the PM
+        if (hour > 12) {
+            timeForNotification.set(Calendar.AM_PM, Calendar.PM);
+        } else {
+            timeForNotification.set(Calendar.AM_PM, Calendar.AM);
+        }
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, timeForNotification.getTimeInMillis(), notificationInterval, pendingIntent);
     }
 
     public static void createAddNewEventTypeDialog(final Context context, final EventOfCategory eventOfCategory) {
@@ -246,6 +309,7 @@ public final class GeneralHelpers {
                                     Toast.makeText(context, "The event type can't be empty.", Toast.LENGTH_LONG).show();
                                 } else {
                                     database.addEventType(eventTypeAsString.trim());
+                                    Toast.makeText(context, "Added event type: " + eventTypeAsString, Toast.LENGTH_LONG).show();
                                     Intent intent = new Intent(context, context.getClass());
                                     Bundle bundle = new Bundle();
                                     bundle.putSerializable(GlobalConstants.EVENT_WORD, eventOfCategory.getEvent());
@@ -269,5 +333,142 @@ public final class GeneralHelpers {
         AlertDialog alertDialog = alertDialogBuilder.create();
 
         alertDialog.show();
+    }
+
+    public static void createAddNewEventTypeDialog(final Context context) {
+        int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(context);
+
+        final DBHandler database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+
+        LayoutInflater li = LayoutInflater.from(context);
+        View promptsView = li.inflate(R.layout.add_event_type_dialog, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                context);
+
+        alertDialogBuilder.setView(promptsView);
+
+        final EditText userInput = (EditText) promptsView
+                .findViewById(R.id.etDialogEventType);
+
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton(GlobalConstants.DIALOG_SAVE_WORD,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                String eventTypeAsString = userInput.getText().toString();
+
+                                if (ValidatorHelpers.isNullOrEmpty(eventTypeAsString)) {
+                                    Toast.makeText(context, "The event type can't be empty.", Toast.LENGTH_LONG).show();
+                                } else {
+                                    database.addEventType(eventTypeAsString.trim());
+
+                                    Toast.makeText(context, "Added event type: " + eventTypeAsString, Toast.LENGTH_LONG).show();
+
+                                    Intent intent = new Intent(context, context.getClass());
+
+                                    context.startActivity(intent);
+
+                                    ((Activity) context).finish();
+                                }
+                            }
+                        })
+                .setNegativeButton(GlobalConstants.DIALOG_CANCEL_WORD,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        alertDialog.show();
+    }
+
+    public static void removeOldEvents(DBHandler database) {
+        ArrayList<Category> listOfCategories = database.createListWithCategoriesFromTable(DatabaseConstants.CATEGORIES_TABLE_NAME);
+        Calendar currentDate = Calendar.getInstance();
+
+        for (int i = 0; i < listOfCategories.size(); i++) {
+            Category category = listOfCategories.get(i);
+
+            ArrayList<MyEvent> listOfEvents = database.createListWithEventsFromTable(category.getSQLName());
+
+            for (int j = 0; j < listOfEvents.size(); j++) {
+                MyEvent currentEvent = listOfEvents.get(j);
+
+                Calendar eventsDate = currentEvent.getDate();
+
+                if (eventsDate.get(Calendar.YEAR) < currentDate.get(Calendar.YEAR)) {
+                    currentEvent.setIsOld(true);
+                    currentEvent.setHasNotification(true);
+                    currentEvent.setIsFinished(true);
+                    database.updateEvent(currentEvent, category.getSQLName());
+                } else if (eventsDate.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR)) {
+                    if (eventsDate.get(Calendar.MONTH) < currentDate.get(Calendar.MONTH)) {
+                        currentEvent.setIsOld(true);
+                        currentEvent.setHasNotification(true);
+                        currentEvent.setIsFinished(true);
+                        database.updateEvent(currentEvent, category.getSQLName());
+                    } else if (eventsDate.get(Calendar.MONTH) == currentDate.get(Calendar.MONTH)) {
+                        if (eventsDate.get(Calendar.DAY_OF_MONTH) < currentDate.get(Calendar.DAY_OF_MONTH)) {
+                            currentEvent.setIsOld(true);
+                            currentEvent.setHasNotification(true);
+                            currentEvent.setIsFinished(true);
+                            database.updateEvent(currentEvent, category.getSQLName());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static ArrayList copyOfArray(ArrayList sourceArray) {
+        ArrayList resultArray = new ArrayList();
+
+        for (int i = 0; i < sourceArray.size(); i++) {
+            resultArray.add(sourceArray.get(i));
+        }
+
+        return resultArray;
+    }
+
+    public static ArrayList<MyEvent> createListOfEventsFromEventOfCategoryArray(ArrayList<EventOfCategory> eventOfCategoryArrayList) {
+        ArrayList<MyEvent> result = new ArrayList<>();
+
+        for (int i = 0; i < eventOfCategoryArrayList.size(); i++) {
+            result.add(eventOfCategoryArrayList.get(i).getEvent());
+        }
+
+        return result;
+    }
+
+    public static ArrayList<EventOfCategory> createListWithEventsOfCategory(ArrayList<MyEvent> myEventArrayList, Category category) {
+        ArrayList<EventOfCategory> result = new ArrayList<>();
+
+        for (int i = 0; i < myEventArrayList.size(); i++) {
+            result.add(new EventOfCategory(category, myEventArrayList.get(i)));
+        }
+
+        return result;
+    }
+
+    public static boolean checkForDifferentCategories(ArrayList<EventOfCategory> eventOfCategoryArrayList) {
+        String lastCategory = "";
+
+        for (int i = 0; i < eventOfCategoryArrayList.size(); i++) {
+            if (i == 0) {
+                lastCategory = eventOfCategoryArrayList.get(i).getCategory().getName();
+                continue;
+            }
+
+            lastCategory = eventOfCategoryArrayList.get(i - 1).getCategory().getName();
+            String currentCategory = eventOfCategoryArrayList.get(i).getCategory().getName();
+
+            if (!lastCategory.equals(currentCategory)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
