@@ -71,19 +71,32 @@ public class MainActivity extends Activity {
 
                 switch (position) {
                     case 0:
+                        ArrayList<Category> listOfCategories = database.createListWithCategoriesFromTable(DatabaseConstants.CATEGORIES_TABLE_NAME);
+
+                        ArrayList<EventOfCategory> listOfEventsForToday = GeneralHelpers.checkForEventForToday(database, listOfCategories);
+
+                        if (listOfEventsForToday.size() > 0) {
+                            Intent intentForTodayEvents = GeneralHelpers.createIntentForCurrentEventsActivity(MainActivity.this, listOfEventsForToday.get(0).getCategory(), false, listOfEventsForToday, true);
+
+                            startActivity(intentForTodayEvents);
+                        } else {
+                            Toast.makeText(MainActivity.this, "No events for today.", Toast.LENGTH_LONG).show();
+                        }
+                        break;
+                    case 1:
                         intent = new Intent(MainActivity.this, OptionsActivity.class);
                         startActivity(intent);
                         break;
-                    case 1:
+                    case 2:
                         Intent broadcastForForceNotifications = new Intent();
                         broadcastForForceNotifications.setAction(GlobalConstants.BOOT_RECEIVER_ACTION_NAME);
 
                         MainActivity.this.sendBroadcast(broadcastForForceNotifications);
                         break;
-                    case 2:
+                    case 3:
                         Toast.makeText(MainActivity.this, "About", Toast.LENGTH_SHORT).show();
                         break;
-                    case 3:
+                    case 4:
                         finish();
                         break;
                 }

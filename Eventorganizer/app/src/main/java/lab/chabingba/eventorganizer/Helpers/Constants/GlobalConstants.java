@@ -37,7 +37,7 @@ public final class GlobalConstants {
         OPEN, CLOSED, OPENING, CLOSING
     }
 
-    public static final String[] MENU_OPTIONS = {"Options", "Force notification", "About", "Exit"};
+    public static final String[] MENU_OPTIONS = {"Events for today", "Options", "Force notification", "About", "Exit"};
 
     public static final String[] DEFAULT_EVENT_TYPES = {
             "Lecture",
