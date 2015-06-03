@@ -1,24 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="cbpAutoCancelNotifications"
-        android:summary="Auto-cancel notifications"
-        android:title="Auto-cancel notification" />
+    <PreferenceCategory
+        android:key="generalCategory"
+        android:title="General">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="cbpAutoRemoveOldEvents"
+            android:summary="Automatically clean old events on app start"
+            android:title="Auto remove old events" />
 
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="cbpAutoRemoveOldEvents"
-        android:summary="Automatically clean old events on app start"
-        android:title="Auto remove old events" />
+    </PreferenceCategory>
 
-    <ListPreference
-        android:defaultValue="86400000"
-        android:entries="@array/notificationIntervals"
-        android:entryValues="@array/notificationIntervalsValues"
-        android:key="notificationInterval"
-        android:summary="Check for notifications interval"
-        android:title="Check for notifications interval" />
+    <PreferenceCategory
+        android:key="notificationsCategory"
+        android:title="Notifications">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="cbpAutoCancelNotifications"
+            android:summary="Auto - cancel notifications"
+            android:title="Auto-cancel notification" />
 
-    <lab.chabingba.eventorganizer.Visual.TimePreference android:title="Set time for notifications" android:key="prefTimePicker" android:summary="Set the time for the notification to show"/>
+        <ListPreference
+            android:defaultValue="86400000"
+            android:entries="@array/notificationIntervals"
+            android:entryValues="@array/notificationIntervalsValues"
+            android:key="notificationInterval"
+            android:summary="Check for notifications interval"
+            android:title="Check for notifications interval" />
+
+        <lab.chabingba.eventorganizer.Visual.TimePreference
+            android:key="prefTimePicker"
+            android:summary="Set the time for the notification to show"
+            android:title="Set hour of notification" />
+    </PreferenceCategory>
 </PreferenceScreen>

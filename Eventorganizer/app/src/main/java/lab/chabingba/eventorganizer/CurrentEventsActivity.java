@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ExpandableListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ExpandableListView;
@@ -48,9 +49,9 @@ public class CurrentEventsActivity extends ExpandableListActivity {
 
         tableName = category.getSQLName();
 
-        TextView tvCategoryName = (TextView) findViewById(R.id.tvCurrentCategory);
+        TextView tvTitleText = (TextView) findViewById(R.id.tvCurrentCategory);
 
-        tvCategoryName.setText(category.getName());
+        tvTitleText.setText(category.getName());
 
         loadOldEvents = getIntent().getBooleanExtra(GlobalConstants.LOAD_OLD_EVENTS_TEXT, false);
         loadTodayEvents = getIntent().getBooleanExtra(GlobalConstants.LOAD_TODAYS_EVENTS_TEXT, false);
@@ -62,7 +63,7 @@ public class CurrentEventsActivity extends ExpandableListActivity {
         //region settings for which events to load
         if (loadOldEvents == true) {
             listOfEvents = GeneralHelpers.selectOldEvents(database.createListWithEventsFromTable(tableName));
-            tvCategoryName.append(GlobalConstants.OLD_EVENTS_TEXT_TO_APPEND);
+            tvTitleText.append(GlobalConstants.OLD_EVENTS_TEXT_TO_APPEND);
 
             ImageButton imageButtonAdd = (ImageButton) findViewById(R.id.imageButtonAddEvent);
             imageButtonAdd.setVisibility(View.GONE);
@@ -76,10 +77,12 @@ public class CurrentEventsActivity extends ExpandableListActivity {
             layoutParams.setMargins(50, 0, 0, 0);
             imageButtonRemoveEvents.setLayoutParams(layoutParams);
 
-            tvCategoryName.setPadding(0, 0, GlobalConstants.CATEGORY_TEXT_VIEW_PADDING_RIGHT, 0);
+            tvTitleText.setPadding(0, 0, GlobalConstants.CATEGORY_TEXT_VIEW_PADDING_RIGHT, 0);
         } else if (loadTodayEvents) {
             listOfEvents = GeneralHelpers.createListOfEventsFromEventOfCategoryArray(listOfEventsForNotification);
-            tvCategoryName.setText("Events for today");
+            tvTitleText.setText("Events for today");
+            tvTitleText.setTextSize(20);
+            tvTitleText.setTextColor(Color.parseColor("#ffffff"));
 
             ImageButton imageButtonAdd = (ImageButton) findViewById(R.id.imageButtonAddEvent);
             imageButtonAdd.setVisibility(View.GONE);
