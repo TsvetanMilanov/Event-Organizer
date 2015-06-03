@@ -81,4 +81,13 @@ public final class QueryHelpers {
 
         return result;
     }
+
+    public static String createQueryForDeletingAllRowsInTable(String tableName) {
+        String tableNameInSQL = QueryHelpers.convertTableNameToSQLConvention(tableName);
+        String result = "";
+
+        result += DatabaseConstants.DELETE_ALL_FROM_TABLE_QUERY + tableNameInSQL + ";";
+
+        return result;
+    }
 }

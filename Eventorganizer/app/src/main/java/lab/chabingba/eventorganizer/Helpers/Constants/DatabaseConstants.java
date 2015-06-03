@@ -56,4 +56,5 @@ public final class DatabaseConstants {
     public static final String MOVE_EVENT_QUERY_START = "INSERT INTO ";
     public static final String MOVE_EVENT_QUERY_MIDDLE = " SELECT * FROM ";
     public static final String MOVE_EVENT_QUERY_END = " WHERE _id = ";
+    public static final String DELETE_ALL_FROM_TABLE_QUERY = "DELETE from ";
 }

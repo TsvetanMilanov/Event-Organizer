@@ -399,19 +399,19 @@ public final class GeneralHelpers {
 
                 Calendar eventsDate = currentEvent.getDate();
 
-                if (eventsDate.get(Calendar.YEAR) < currentDate.get(Calendar.YEAR)) {
+                if (eventsDate.get(Calendar.YEAR) < currentDate.get(Calendar.YEAR) && !currentEvent.getIsOld()) {
                     currentEvent.setIsOld(true);
                     currentEvent.setHasNotification(true);
                     currentEvent.setIsFinished(true);
                     database.updateEvent(currentEvent, category.getSQLName());
                 } else if (eventsDate.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR)) {
-                    if (eventsDate.get(Calendar.MONTH) < currentDate.get(Calendar.MONTH)) {
+                    if (eventsDate.get(Calendar.MONTH) < currentDate.get(Calendar.MONTH) && !currentEvent.getIsOld()) {
                         currentEvent.setIsOld(true);
                         currentEvent.setHasNotification(true);
                         currentEvent.setIsFinished(true);
                         database.updateEvent(currentEvent, category.getSQLName());
                     } else if (eventsDate.get(Calendar.MONTH) == currentDate.get(Calendar.MONTH)) {
-                        if (eventsDate.get(Calendar.DAY_OF_MONTH) < currentDate.get(Calendar.DAY_OF_MONTH)) {
+                        if (eventsDate.get(Calendar.DAY_OF_MONTH) < currentDate.get(Calendar.DAY_OF_MONTH) && !currentEvent.getIsOld()) {
                             currentEvent.setIsOld(true);
                             currentEvent.setHasNotification(true);
                             currentEvent.setIsFinished(true);

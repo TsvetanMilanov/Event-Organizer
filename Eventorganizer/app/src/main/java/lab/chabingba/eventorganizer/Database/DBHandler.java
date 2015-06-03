@@ -413,4 +413,13 @@ public class DBHandler extends SQLiteOpenHelper {
         database.execSQL(removeQuery);
         database.close();
     }
+
+    public void deleteAllRowsInTable(String tableName) {
+        String query = QueryHelpers.createQueryForDeletingAllRowsInTable(tableName);
+        SQLiteDatabase database = getWritableDatabase();
+
+        database.execSQL(query);
+
+        database.close();
+    }
 }

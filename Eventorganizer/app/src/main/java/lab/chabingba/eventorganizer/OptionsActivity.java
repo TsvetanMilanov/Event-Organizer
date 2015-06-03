@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import lab.chabingba.eventorganizer.Database.Category;
 import lab.chabingba.eventorganizer.Database.DBHandler;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
@@ -35,7 +36,7 @@ public class OptionsActivity extends Activity {
 
         ListView listView = (ListView) findViewById(R.id.lvOptionsInOptions);
 
-        String[] listOfOptions = {"Preferences", "Add new event type", "Remove event type", "Remove old events"};
+        String[] listOfOptions = {"Preferences", "Add new event type", "Remove event type", "Remove old events", "Clear events in category"};
 
         listView.setAdapter(new CustomAdapterForOptions(this, listOfOptions));
 
@@ -103,6 +104,42 @@ public class OptionsActivity extends Activity {
                         //Remove old events
                         GeneralHelpers.removeOldEvents(database);
                         Toast.makeText(OptionsActivity.this, "Old events cleared", Toast.LENGTH_LONG).show();
+                        break;
+                    case 4:
+                        //Clear events in category
+                        AlertDialog alertDialog;
+                        AlertDialog.Builder categorySelectBuilder = new AlertDialog.Builder(OptionsActivity.this);
+
+                        final ArrayList<Category> listOfCategories = database.createListWithCategoriesFromTable(DatabaseConstants.CATEGORIES_TABLE_NAME);
+                        final String[] allCategories = GeneralHelpers.createStringArrayWithCategoryNames(listOfCategories);
+
+                        categorySelectBuilder.setItems(allCategories, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                final AlertDialog confirmClearEventsDialog;
+                                AlertDialog.Builder confirmClearEventsDialogBuilder = new AlertDialog.Builder(OptionsActivity.this);
+                                final String categoryName = allCategories[which];
+
+                                confirmClearEventsDialogBuilder.setMessage("Are you sure you want to delete all events in " + categoryName + "? \n(This will delete the old events too)")
+                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                database.deleteAllRowsInTable(categoryName);
+                                                Toast.makeText(OptionsActivity.this, "Removed all events in: " + categoryName, Toast.LENGTH_LONG).show();
+                                            }
+                                        })
+                                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                            }
+                                        });
+                                confirmClearEventsDialog = confirmClearEventsDialogBuilder.create();
+                                confirmClearEventsDialog.show();
+                            }
+                        });
+
+                        alertDialog = categorySelectBuilder.create();
+                        alertDialog.show();
                         break;
                 }
             }
