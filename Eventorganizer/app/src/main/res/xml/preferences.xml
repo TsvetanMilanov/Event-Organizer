@@ -17,8 +17,8 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="cbpAutoCancelNotifications"
-            android:summary="Auto - cancel notifications"
-            android:title="Auto-cancel notification" />
+            android:summary="Auto-cancel notifications"
+            android:title="Auto - cancel notification" />
 
         <ListPreference
             android:defaultValue="86400000"
