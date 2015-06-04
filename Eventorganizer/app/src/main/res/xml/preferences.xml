@@ -14,12 +14,35 @@
     <PreferenceCategory
         android:key="notificationsCategory"
         android:title="Notifications">
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/notificationTypes"
+            android:entryValues="@array/notificationTypesValues"
+            android:key="notificationType"
+            android:summary="Select the type of notifications"
+            android:title="Notification type" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="cbpAutoCancelNotifications"
             android:summary="Auto-cancel notifications"
             android:title="Auto - cancel notification" />
+    </PreferenceCategory>
 
+    <PreferenceCategory
+        android:key="notificationsMultipleCategory"
+        android:title="Notification before event">
+        <ListPreference
+            android:defaultValue="10800000"
+            android:entries="@array/timeBeforeEvent"
+            android:entryValues="@array/timeBeforeEventValues"
+            android:key="timeBeforeEvent"
+            android:summary="Select the time for notification before event's hour."
+            android:title="Time for notification before event" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="notificationsOnceCategory"
+        android:title="One notification">
         <ListPreference
             android:defaultValue="86400000"
             android:entries="@array/notificationIntervals"

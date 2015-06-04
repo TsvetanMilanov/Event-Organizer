@@ -3,6 +3,8 @@ package lab.chabingba.eventorganizer.Notifications;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
@@ -12,11 +14,22 @@ import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
  */
 public class BootReceiver extends BroadcastReceiver {
     private static final String TAG = "BroadcastReceiver";
+    private SharedPreferences sharedPreferences;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG, "Receiver received on boot intent.");
 
-        GeneralHelpers.createAlarmManager(context);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        int notificationsType = Integer.valueOf(sharedPreferences.getString("notificationType", "0"));
+
+        if (notificationsType == 0 || notificationsType == 2) {
+            GeneralHelpers.createAlarmManager(context);
+        }
+
+        if (notificationsType == 1 || notificationsType == 2) {
+            GeneralHelpers.createMultiAlarms(context);
+        }
     }
 }

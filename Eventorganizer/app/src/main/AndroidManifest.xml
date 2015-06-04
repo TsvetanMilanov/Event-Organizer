@@ -95,7 +95,11 @@
 
         <service
             android:name="lab.chabingba.eventorganizer.Notifications.NotificationService"
-            android:enabled="true"></service>
+            android:enabled="true" />
+
+        <service
+            android:name="lab.chabingba.eventorganizer.Notifications.MultiNotificationsService"
+            android:enabled="true" />
     </application>
 
 </manifest>

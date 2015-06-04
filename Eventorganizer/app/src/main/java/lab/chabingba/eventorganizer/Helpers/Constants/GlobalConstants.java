@@ -24,6 +24,7 @@ public final class GlobalConstants {
     public static final String LOAD_TODAYS_EVENTS_TEXT = "LoadTodaysEvents";
     public static final String EVENTS_FOR_NOTIFICATION_TEXT = "EventsForNotification";
     public static final String BASE_RETURN = "BaseReturn";
+    public static final String REQUEST_CODE_WORD = "RequestCode";
     public static final String OLD_EVENTS_TEXT_TO_APPEND = " - Old Events";
     public static final String EVENT_WORD = "Event";
     public static final String DIALOG_CANCEL_WORD = "Cancel";

@@ -17,4 +17,40 @@
         <item>43200000</item>
         <item>86400000</item>
     </string-array>
+
+    <string-array name="notificationTypes">
+        <item>One notification at specific time</item>
+        <item>Notifications before every event</item>
+        <item>Both</item>
+    </string-array>
+
+    <string-array name="notificationTypesValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="timeBeforeEvent">
+        <item>0 minutes</item>
+        <item>5 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>2 hours</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>12 hours</item>
+        <item>1 day</item>
+    </string-array>
+
+    <string-array name="timeBeforeEventValues">
+        <item>0</item>
+        <item>300000</item>
+        <item>1800000</item>
+        <item>3600000</item>
+        <item>7200000</item>
+        <item>10800000</item>
+        <item>21600000</item>
+        <item>43200000</item>
+        <item>86400000</item>
+    </string-array>
 </resources>

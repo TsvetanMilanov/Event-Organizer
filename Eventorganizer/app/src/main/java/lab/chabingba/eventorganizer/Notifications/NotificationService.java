@@ -51,6 +51,7 @@ public class NotificationService extends Service {
             Log.i(TAG, "No event for today.");
         }
 
+
         return 0;
     }
 

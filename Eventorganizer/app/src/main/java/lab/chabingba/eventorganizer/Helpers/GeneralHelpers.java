@@ -31,6 +31,7 @@ import lab.chabingba.eventorganizer.Database.MyEvent;
 import lab.chabingba.eventorganizer.EditEventActivity;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
+import lab.chabingba.eventorganizer.Notifications.MultiNotificationsService;
 import lab.chabingba.eventorganizer.Notifications.NotificationService;
 import lab.chabingba.eventorganizer.R;
 import lab.chabingba.eventorganizer.ViewEventActivity;
@@ -237,33 +238,7 @@ public final class GeneralHelpers {
     public static void createAlarmManager(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-        String notificationsInterval = preferences.getString("notificationInterval", "86400000");
-
-        long notificationInterval = 0;
-
-        switch (notificationsInterval) {
-            case "86400000":
-                notificationInterval = 86400000;
-                break;
-            case "43200000":
-                notificationInterval = 43200000;
-                break;
-            case "21600000":
-                notificationInterval = 21600000;
-                break;
-            case "3600000":
-                notificationInterval = 3600000;
-                break;
-            case "1800000":
-                notificationInterval = 1800000;
-                break;
-            case "300000":
-                notificationInterval = 300000;
-                break;
-            default:
-                notificationInterval = 86400000;
-                break;
-        }
+        long notificationInterval = Long.valueOf(preferences.getString("notificationInterval", "86400000"));
 
         String hourAsString = preferences.getString("prefTimePicker", "10:00");
 
@@ -558,5 +533,82 @@ public final class GeneralHelpers {
 
         context.startActivity(intent);
         ((Activity) context).finish();
+    }
+
+    public static void createMultiAlarms(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        long timeBeforeEvent = Long.valueOf(sharedPreferences.getString("timeBeforeEvent", "10800000"));
+
+        int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(context);
+
+        DBHandler database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+
+        ArrayList<EventOfCategory> listOfEventsForToday = GeneralHelpers.checkForEventForToday(database);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        for (int i = 0; i < listOfEventsForToday.size(); i++) {
+            EventOfCategory currentEvent = listOfEventsForToday.get(i);
+            int requestCode = i + 1;
+
+            Intent myIntent = new Intent(context, MultiNotificationsService.class);
+            Bundle bundle = new Bundle();
+
+            bundle.putSerializable(GlobalConstants.EVENT_OF_CATEGORY_WORD, currentEvent);
+            bundle.putInt(GlobalConstants.REQUEST_CODE_WORD, requestCode);
+
+            myIntent.putExtras(bundle);
+
+            PendingIntent pendingIntent = PendingIntent.getService(context, requestCode, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            Calendar timeForNotification = currentEvent.getEvent().getDate();
+
+            long timeAsLong = timeForNotification.getTimeInMillis() - timeBeforeEvent;
+
+            if (timeAsLong < 0) {
+                timeAsLong = 1;
+            }
+
+            alarmManager.set(AlarmManager.RTC_WAKEUP, timeAsLong, pendingIntent);
+            Log.i(TAG, "Created MultiAlarm.");
+        }
+    }
+
+    public static void createNotification(Context context, EventOfCategory currentEvent, int requestCode) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        boolean autoCancel = preferences.getBoolean("cbpAutoCancelNotifications", true);
+
+        int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(context);
+
+        DBHandler database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+
+        ArrayList<EventOfCategory> listOfEventsForToday = checkForEventForToday(database);
+
+        Intent intentForView = new Intent(context, ViewEventActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(GlobalConstants.EVENTS_FOR_NOTIFICATION_TEXT, listOfEventsForToday);
+        bundle.putBoolean(GlobalConstants.BASE_RETURN, true);
+        bundle.putSerializable(GlobalConstants.EVENT_OF_CATEGORY_WORD, currentEvent);
+        intentForView.putExtras(bundle);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, requestCode, intentForView, 0);
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Notification notification = new Notification(R.drawable.icon, currentEvent.getCategory().getName() + " " + GlobalConstants.EVENT_WORD, Calendar.getInstance().getTimeInMillis());
+
+        notification.setLatestEventInfo(context, currentEvent.getEvent().getType(), currentEvent.getEvent().getDescription(), pendingIntent);
+
+        notification.sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        if (autoCancel) {
+            notification.flags = notification.flags | notification.FLAG_AUTO_CANCEL;
+        }
+
+        notificationManager.notify(0, notification);
+
+        Log.i(TAG, "Notification created");
     }
 }
