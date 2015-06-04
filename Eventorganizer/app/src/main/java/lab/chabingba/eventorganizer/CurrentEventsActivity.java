@@ -6,6 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
@@ -20,20 +23,20 @@ import lab.chabingba.eventorganizer.Database.MyEvent;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
+import lab.chabingba.eventorganizer.Helpers.ValidatorHelpers;
 import lab.chabingba.eventorganizer.Visual.CustomExpandableListAdapters.CustomExpandableListAdapter;
 
 /**
  * Created by Tsvetan on 2015-05-26.
  */
 public class CurrentEventsActivity extends ExpandableListActivity {
-    private ExpandableListView expandableListView;
     private ArrayList<MyEvent> listOfEvents;
+    private ArrayList<EventOfCategory> listOfEventsForNotification;
     private DBHandler database;
     private String tableName = GlobalConstants.EMPTY_STRING;
     private Category category;
     private boolean loadOldEvents;
-    private ArrayList<EventOfCategory> listOfEventsForNotification;
-    private boolean loadTodayEvents;
+    private ExpandableListView expandableListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +56,19 @@ public class CurrentEventsActivity extends ExpandableListActivity {
         tvTitleText.setText(category.getName());
 
         loadOldEvents = getIntent().getBooleanExtra(GlobalConstants.LOAD_OLD_EVENTS_TEXT, false);
-        loadTodayEvents = getIntent().getBooleanExtra(GlobalConstants.LOAD_TODAYS_EVENTS_TEXT, false);
+        boolean loadTodayEvents = getIntent().getBooleanExtra(GlobalConstants.LOAD_TODAYS_EVENTS_TEXT, false);
 
         listOfEventsForNotification = (ArrayList<EventOfCategory>) getIntent().getSerializableExtra(GlobalConstants.EVENTS_FOR_NOTIFICATION_TEXT);
 
         expandableListView = (ExpandableListView) findViewById(android.R.id.list);
+        expandableListView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            @Override
+            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                MenuInflater menuInflater = getMenuInflater();
+                menuInflater.inflate(R.menu.parent_logn_click_menu, menu);
+            }
+        });
+
 
         //region settings for which events to load
         if (loadOldEvents == true) {
@@ -179,4 +190,37 @@ public class CurrentEventsActivity extends ExpandableListActivity {
         }
     }
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        MyEvent currentEvent;
+        Category currentCategory;
+        ArrayList<EventOfCategory> listToPass;
+
+        if (ValidatorHelpers.isNullOrEmpty(this.listOfEventsForNotification)) {
+            currentCategory = this.category;
+            currentEvent = this.listOfEvents.get(item.getGroupId());
+            listToPass = GeneralHelpers.createListWithEventsOfCategory(this.listOfEvents, category);
+        } else {
+            currentEvent = listOfEventsForNotification.get(item.getGroupId()).getEvent();
+            currentCategory = listOfEventsForNotification.get(item.getGroupId()).getCategory();
+            listToPass = this.listOfEventsForNotification;
+        }
+
+        switch (item.getItemId()) {
+            case R.id.long_click_item_view:
+                GeneralHelpers.viewEvent(this, item.getGroupId(), currentCategory, listToPass);
+                return true;
+            case R.id.long_click_item_edit:
+                GeneralHelpers.editEvent(this, currentEvent, currentCategory);
+                return true;
+            case R.id.long_click_item_move:
+                GeneralHelpers.moveEvent(this, this.database, currentEvent, currentCategory);
+                return true;
+            case R.id.long_click_item_delete:
+                GeneralHelpers.deleteEvent(this, database, currentEvent, currentCategory);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
 }

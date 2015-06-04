@@ -28,10 +28,12 @@ import lab.chabingba.eventorganizer.Database.Category;
 import lab.chabingba.eventorganizer.Database.DBHandler;
 import lab.chabingba.eventorganizer.Database.EventOfCategory;
 import lab.chabingba.eventorganizer.Database.MyEvent;
+import lab.chabingba.eventorganizer.EditEventActivity;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 import lab.chabingba.eventorganizer.Notifications.NotificationService;
 import lab.chabingba.eventorganizer.R;
+import lab.chabingba.eventorganizer.ViewEventActivity;
 
 /**
  * Created by Tsvetan on 2015-05-25.
@@ -478,5 +480,83 @@ public final class GeneralHelpers {
             }
         }
         return false;
+    }
+
+    public static void moveEvent(final Context context, final DBHandler database, final MyEvent currentEvent, final Category category) {
+        AlertDialog alertDialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        final ArrayList<Category> listOfCategories = database.createListWithCategoriesFromTable(DatabaseConstants.CATEGORIES_TABLE_NAME);
+        final String[] allCategories = GeneralHelpers.createStringArrayWithCategoryNames(listOfCategories);
+
+        builder.setItems(allCategories, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                database.moveEvent(currentEvent, category, listOfCategories.get(which));
+                Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(context, category, false, new ArrayList<EventOfCategory>(0), false);
+
+                context.startActivity(intent);
+                ((Activity) context).finish();
+            }
+        });
+
+        alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    public static void viewEvent(Context context, int groupPosition, Category currentEventsCategory, ArrayList<EventOfCategory> listOfEvents) {
+        Intent intent = new Intent(context, ViewEventActivity.class);
+        Bundle bundle = new Bundle();
+        EventOfCategory eventOfCategoryToPass = new EventOfCategory(currentEventsCategory, listOfEvents.get(groupPosition).getEvent());
+        bundle.putSerializable(GlobalConstants.EVENTS_FOR_NOTIFICATION_TEXT, listOfEvents);
+        bundle.putSerializable(GlobalConstants.EVENT_OF_CATEGORY_WORD, eventOfCategoryToPass);
+        bundle.putBoolean(GlobalConstants.BASE_RETURN, GeneralHelpers.checkForDifferentCategories(listOfEvents));
+
+        intent.putExtras(bundle);
+
+        context.startActivity(intent);
+        ((Activity) context).finish();
+    }
+
+    public static void deleteEvent(final Context context, final DBHandler database, final MyEvent currentEvent, final Category currentEventsCategory) {
+        AlertDialog.Builder deleteDialog = new AlertDialog.Builder(context);
+
+        deleteDialog.setMessage("Are you sure you want to delete this event?");
+
+        deleteDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                database.removeEvent(currentEventsCategory.getSQLName(), currentEvent.getId());
+
+                Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(context, currentEventsCategory, false, new ArrayList<EventOfCategory>(0), false);
+
+                context.startActivity(intent);
+
+                ((Activity) context).finish();
+            }
+        });
+
+        deleteDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog alertDialog = deleteDialog.create();
+        alertDialog.show();
+    }
+
+    public static void editEvent(Context context, MyEvent currentEvent, Category currentEventsCategory) {
+        Intent intent = new Intent(context, EditEventActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(GlobalConstants.EVENT_WORD, currentEvent);
+        bundle.putSerializable(GlobalConstants.CATEGORY_WORD, currentEventsCategory);
+
+        intent.putExtras(bundle);
+
+        context.startActivity(intent);
+        ((Activity) context).finish();
     }
 }

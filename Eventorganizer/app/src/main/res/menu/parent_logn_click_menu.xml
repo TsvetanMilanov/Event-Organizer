@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/long_click_item_view"
+        android:title="View event" />
+
+    <item
+        android:id="@+id/long_click_item_edit"
+        android:title="Edit event" />
+
+    <item
+        android:id="@+id/long_click_item_move"
+        android:title="Move event" />
+
+    <item
+        android:id="@+id/long_click_item_delete"
+        android:title="Delete event" />
+
+</menu>

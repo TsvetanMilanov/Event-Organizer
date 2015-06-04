@@ -1,11 +1,6 @@
 package lab.chabingba.eventorganizer.Visual.CustomExpandableListAdapters;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,13 +17,10 @@ import lab.chabingba.eventorganizer.Database.Category;
 import lab.chabingba.eventorganizer.Database.DBHandler;
 import lab.chabingba.eventorganizer.Database.EventOfCategory;
 import lab.chabingba.eventorganizer.Database.MyEvent;
-import lab.chabingba.eventorganizer.EditEventActivity;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
-import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
 import lab.chabingba.eventorganizer.Helpers.ValidatorHelpers;
 import lab.chabingba.eventorganizer.R;
-import lab.chabingba.eventorganizer.ViewEventActivity;
 
 /**
  * Created by Tsvetan on 2015-05-27.
@@ -134,90 +126,28 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         imageButtonEditEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, EditEventActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(GlobalConstants.EVENT_WORD, currentEvent);
-                bundle.putSerializable(GlobalConstants.CATEGORY_WORD, currentEventsCategory);
-
-                intent.putExtras(bundle);
-
-                context.startActivity(intent);
-                ((Activity) context).finish();
+                GeneralHelpers.editEvent(CustomExpandableListAdapter.this.context, currentEvent, currentEventsCategory);
             }
         });
 
         imageButtonDeleteEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AlertDialog.Builder deleteDialog = new AlertDialog.Builder(context);
-
-                deleteDialog.setMessage("Are you sure you want to delete this event?");
-
-                deleteDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        database.removeEvent(category.getSQLName(), currentEvent.getId());
-
-                        Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(context, currentEventsCategory, false, new ArrayList<EventOfCategory>(0), false);
-
-                        context.startActivity(intent);
-
-                        ((Activity) context).finish();
-                    }
-                });
-
-                deleteDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                AlertDialog alertDialog = deleteDialog.create();
-                alertDialog.show();
+                GeneralHelpers.deleteEvent(CustomExpandableListAdapter.this.context, database, currentEvent, currentEventsCategory);
             }
         });
 
         imageButtonViewEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ViewEventActivity.class);
-                Bundle bundle = new Bundle();
-                EventOfCategory eventOfCategoryToPass = new EventOfCategory(currentEventsCategory, listOfEvents.get(groupPosition).getEvent());
-                bundle.putSerializable(GlobalConstants.EVENTS_FOR_NOTIFICATION_TEXT, listOfEvents);
-                bundle.putSerializable(GlobalConstants.EVENT_OF_CATEGORY_WORD, eventOfCategoryToPass);
-                bundle.putBoolean(GlobalConstants.BASE_RETURN, GeneralHelpers.checkForDifferentCategories(listOfEvents));
-
-                intent.putExtras(bundle);
-
-                context.startActivity(intent);
-                ((Activity) context).finish();
+                GeneralHelpers.viewEvent(CustomExpandableListAdapter.this.context, groupPosition, currentEventsCategory, listOfEvents);
             }
         });
 
         imageButtonMoveEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog alertDialog;
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-                final ArrayList<Category> listOfCategories = database.createListWithCategoriesFromTable(DatabaseConstants.CATEGORIES_TABLE_NAME);
-                final String[] allCategories = GeneralHelpers.createStringArrayWithCategoryNames(listOfCategories);
-
-                builder.setItems(allCategories, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        database.moveEvent(currentEvent, category, listOfCategories.get(which));
-                        Intent intent = GeneralHelpers.createIntentForCurrentEventsActivity(context, category, false, new ArrayList<EventOfCategory>(0), false);
-
-                        context.startActivity(intent);
-                        ((Activity) context).finish();
-                    }
-                });
-
-                alertDialog = builder.create();
-                alertDialog.show();
+                GeneralHelpers.moveEvent(CustomExpandableListAdapter.this.context, database, currentEvent, category);
             }
         });
         //endregion
