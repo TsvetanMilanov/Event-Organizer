@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 import lab.chabingba.eventorganizer.Helpers.QueryHelpers;
+import lab.chabingba.eventorganizer.Helpers.ValidatorHelpers;
 
 /**
  * Created by Tsvetan on 2015-05-25.
@@ -394,6 +395,28 @@ public class DBHandler extends SQLiteOpenHelper {
         database.close();
     }
 
+    private void updateEvent(SQLiteDatabase database, MyEvent editedEvent, String tableToAddTo) {
+        String where = DatabaseConstants.EVENT_FIELD_ID + " = " + editedEvent.getId();
+
+        ContentValues eventAsContentValues = new ContentValues();
+
+        eventAsContentValues.put(DatabaseConstants.EVENT_FIELD_TYPE, editedEvent.getType());
+        eventAsContentValues.put(DatabaseConstants.EVENT_FIELD_DATE, editedEvent.getDateAsStringWithDefaultFormat());
+        eventAsContentValues.put(DatabaseConstants.EVENT_FIELD_LOCATION, editedEvent.getLocation());
+        eventAsContentValues.put(DatabaseConstants.EVENT_FIELD_DESCRIPTION, editedEvent.getDescription());
+        eventAsContentValues.put(DatabaseConstants.EVENT_FIELD_IS_FINISHED, editedEvent.getIsFinished());
+        eventAsContentValues.put(DatabaseConstants.EVENT_FIELD_HAS_NOTIFICATION, editedEvent.getHasNotification());
+        eventAsContentValues.put(DatabaseConstants.EVENT_FIELD_IS_OLD, editedEvent.getIsOld());
+
+        int result = database.update(tableToAddTo, eventAsContentValues, where, null);
+
+        if (result == 0) {
+            Log.e(TAG, "Error while updating event:\n" + editedEvent.toString());
+        } else {
+            Log.i(TAG, "Successfully updated event.");
+        }
+    }
+
     public void moveEvent(MyEvent eventToMove, Category oldCategory, Category newCategory) {
         String oldTableName = oldCategory.getSQLName();
         String newTableName = newCategory.getSQLName();
@@ -420,6 +443,23 @@ public class DBHandler extends SQLiteOpenHelper {
 
         database.execSQL(query);
 
+        database.close();
+    }
+
+    public void setHasNotificationToEvents(ArrayList<EventOfCategory> listOfEvents) {
+        if (ValidatorHelpers.isNullOrEmpty(listOfEvents)) {
+            return;
+        }
+        SQLiteDatabase database = getWritableDatabase();
+
+        for (int i = 0; i < listOfEvents.size(); i++) {
+            MyEvent updatedEvent = listOfEvents.get(i).getEvent();
+            String categorySQLName = listOfEvents.get(i).getCategory().getSQLName();
+            updatedEvent.setHasNotification(true);
+
+            this.updateEvent(database, updatedEvent, categorySQLName);
+        }
+        
         database.close();
     }
 }

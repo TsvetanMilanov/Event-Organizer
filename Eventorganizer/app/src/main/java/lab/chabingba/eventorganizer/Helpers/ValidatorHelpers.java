@@ -1,5 +1,7 @@
 package lab.chabingba.eventorganizer.Helpers;
 
+import java.util.ArrayList;
+
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 
 /**
@@ -16,6 +18,14 @@ public final class ValidatorHelpers {
 
     public static boolean isNullOrEmpty(String inputString) {
         if (inputString == null || inputString.length() <= 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean isNullOrEmpty(ArrayList list) {
+        if (list == null || list.size() <= 0) {
             return true;
         }
 

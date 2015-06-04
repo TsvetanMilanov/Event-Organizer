@@ -71,11 +71,9 @@ public class MainActivity extends Activity {
 
                 switch (position) {
                     case 0:
-                        ArrayList<Category> listOfCategories = database.createListWithCategoriesFromTable(DatabaseConstants.CATEGORIES_TABLE_NAME);
+                        ArrayList<EventOfCategory> listOfEventsForToday = GeneralHelpers.checkForEventForToday(database);
 
-                        ArrayList<EventOfCategory> listOfEventsForToday = GeneralHelpers.checkForEventForToday(database, listOfCategories);
-
-                        if (listOfEventsForToday.size() > 0) {
+                        if (!ValidatorHelpers.isNullOrEmpty(listOfEventsForToday)) {
                             Intent intentForTodayEvents = GeneralHelpers.createIntentForCurrentEventsActivity(MainActivity.this, listOfEventsForToday.get(0).getCategory(), false, listOfEventsForToday, true);
 
                             startActivity(intentForTodayEvents);
@@ -88,10 +86,10 @@ public class MainActivity extends Activity {
                         startActivity(intent);
                         break;
                     case 2:
-                        Intent broadcastForForceNotifications = new Intent();
-                        broadcastForForceNotifications.setAction(GlobalConstants.BOOT_RECEIVER_ACTION_NAME);
+                        ArrayList<EventOfCategory> listOfEventsForTodayForForceNotification = GeneralHelpers.checkForEventForToday(database);
 
-                        MainActivity.this.sendBroadcast(broadcastForForceNotifications);
+                        GeneralHelpers.createNotification(MainActivity.this, listOfEventsForTodayForForceNotification);
+
                         break;
                     case 3:
                         Toast.makeText(MainActivity.this, "About", Toast.LENGTH_SHORT).show();

@@ -148,18 +148,22 @@ public final class GeneralHelpers {
         return result;
     }
 
-    public static void startServiceForNotifications(Context context) {
-        Intent intent = new Intent(context, NotificationService.class);
-
-        context.startService(intent);
-    }
-
     public static void createNotification(Context context, ArrayList<EventOfCategory> listOfEventsForNotification) {
+        if (ValidatorHelpers.isNullOrEmpty(listOfEventsForNotification)) {
+            return;
+        }
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         boolean autoCancel = preferences.getBoolean("cbpAutoCancelNotifications", true);
 
-        Intent intentForEdit = GeneralHelpers.createIntentForCurrentEventsActivity(context, listOfEventsForNotification.get(0).getCategory(), false, listOfEventsForNotification, true);
+        int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(context);
+
+        DBHandler database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+
+        ArrayList<EventOfCategory> listOfEventsForToday = checkForEventForToday(database);
+
+        Intent intentForEdit = GeneralHelpers.createIntentForCurrentEventsActivity(context, listOfEventsForToday.get(0).getCategory(), false, listOfEventsForToday, true);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intentForEdit, 0);
 
@@ -175,12 +179,14 @@ public final class GeneralHelpers {
             notification.flags = notification.flags | notification.FLAG_AUTO_CANCEL;
         }
 
-        notificationManager.notify(1, notification);
+        notificationManager.notify(0, notification);
 
         Log.i(TAG, "Notification created");
     }
 
-    public static ArrayList<EventOfCategory> checkForEventForToday(DBHandler database, ArrayList<Category> listOfCategories) {
+    public static ArrayList<EventOfCategory> checkForEventForToday(DBHandler database) {
+        ArrayList<Category> listOfCategories = database.createListWithCategoriesFromTable(DatabaseConstants.CATEGORIES_TABLE_NAME);
+
         ArrayList<EventOfCategory> result = new ArrayList<>();
         Calendar currentDate = Calendar.getInstance();
 
@@ -193,7 +199,7 @@ public final class GeneralHelpers {
             for (int j = 0; j < listOfEvents.size(); j++) {
                 MyEvent currentEvent = listOfEvents.get(j);
 
-                if (currentEvent.getIsOld() || currentEvent.getHasNotification()) {
+                if (currentEvent.getIsOld()) {
                     continue;
                 }
 
@@ -213,11 +219,13 @@ public final class GeneralHelpers {
     }
 
     public static ArrayList<EventOfCategory> removeEventsWithNotifications(ArrayList<EventOfCategory> listOfEventsForToday) {
-        ArrayList<EventOfCategory> result = GeneralHelpers.copyOfArray(listOfEventsForToday);
+        ArrayList<EventOfCategory> result = new ArrayList<>();
 
         for (int i = 0; i < result.size(); i++) {
-            if (result.get(i).getEvent().getHasNotification() || result.get(i).getEvent().getIsOld() || result.get(i).getEvent().getIsFinished()) {
-                result.remove(i);
+            if (listOfEventsForToday.get(i).getEvent().getHasNotification() || listOfEventsForToday.get(i).getEvent().getIsOld() || listOfEventsForToday.get(i).getEvent().getIsFinished()) {
+                continue;
+            } else {
+                result.add(listOfEventsForToday.get(i));
             }
         }
 

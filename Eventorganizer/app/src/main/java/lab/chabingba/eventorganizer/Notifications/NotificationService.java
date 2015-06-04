@@ -4,15 +4,14 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import lab.chabingba.eventorganizer.Database.Category;
 import lab.chabingba.eventorganizer.Database.DBHandler;
 import lab.chabingba.eventorganizer.Database.EventOfCategory;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
+import lab.chabingba.eventorganizer.Helpers.ValidatorHelpers;
 
 /**
  * Created by Tsvetan on 2015-05-29.
@@ -36,20 +35,19 @@ public class NotificationService extends Service {
 
         DBHandler database = new DBHandler(this, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
 
-        ArrayList<Category> listOfCategories = database.createListWithCategoriesFromTable(DatabaseConstants.CATEGORIES_TABLE_NAME);
-
-        ArrayList<EventOfCategory> listOfEventsForToday = GeneralHelpers.checkForEventForToday(database, listOfCategories);
+        ArrayList<EventOfCategory> listOfEventsForToday = GeneralHelpers.checkForEventForToday(database);
 
         ArrayList<EventOfCategory> listOfEventsForNotification = GeneralHelpers.removeEventsWithNotifications(listOfEventsForToday);
 
-        if (listOfEventsForNotification.size() > 0) {
+        if (!ValidatorHelpers.isNullOrEmpty(listOfEventsForNotification)) {
             Log.i(TAG, "Found event/s for today.");
 
             GeneralHelpers.createNotification(getBaseContext(), listOfEventsForNotification);
 
+            database.setHasNotificationToEvents(listOfEventsForToday);
+
             Log.i(TAG, "Created notification");
         } else {
-            Toast.makeText(getBaseContext(), "No events for today", Toast.LENGTH_LONG).show();
             Log.i(TAG, "No event for today.");
         }
 
