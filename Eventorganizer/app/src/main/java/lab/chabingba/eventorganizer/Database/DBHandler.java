@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
+import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
 import lab.chabingba.eventorganizer.Helpers.QueryHelpers;
 import lab.chabingba.eventorganizer.Helpers.ValidatorHelpers;
 
@@ -24,8 +25,9 @@ import lab.chabingba.eventorganizer.Helpers.ValidatorHelpers;
 public class DBHandler extends SQLiteOpenHelper {
     private static final String TAG = "eventorganizer.Database";
 
-    public DBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+    public DBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory) {
+        super(context, name, factory, GeneralHelpers.getCurrentDatabaseVersion(context));
+
         Log.i(TAG, "Constructor passed.");
     }
 
@@ -459,7 +461,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
             this.updateEvent(database, updatedEvent, categorySQLName);
         }
-        
+
         database.close();
     }
 }

@@ -43,9 +43,7 @@ public class CurrentEventsActivity extends ExpandableListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.current_events_activity_layout);
 
-        int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(this);
-
-        database = new DBHandler(this, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+        database = new DBHandler(this, DatabaseConstants.DATABASE_NAME, null);
 
         category = (Category) getIntent().getSerializableExtra(GlobalConstants.CATEGORY_WORD);
 

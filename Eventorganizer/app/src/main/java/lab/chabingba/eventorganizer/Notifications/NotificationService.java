@@ -31,9 +31,7 @@ public class NotificationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "NotificationService started.");
 
-        int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(this);
-
-        DBHandler database = new DBHandler(this, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+        DBHandler database = new DBHandler(this, DatabaseConstants.DATABASE_NAME, null);
 
         ArrayList<EventOfCategory> listOfEventsForToday = GeneralHelpers.checkForEventForToday(database);
 

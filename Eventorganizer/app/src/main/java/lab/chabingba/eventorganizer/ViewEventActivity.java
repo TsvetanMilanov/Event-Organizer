@@ -38,9 +38,8 @@ public class ViewEventActivity extends Activity {
 
         listOfEvents = (ArrayList<EventOfCategory>) getIntent().getSerializableExtra(GlobalConstants.EVENTS_FOR_NOTIFICATION_TEXT);
         backToTodayEvents = getIntent().getBooleanExtra(GlobalConstants.BASE_RETURN, false);
-
-        int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(this);
-        this.database = new DBHandler(this, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+        
+        this.database = new DBHandler(this, DatabaseConstants.DATABASE_NAME, null);
 
         EventOfCategory eventOfCategory = (EventOfCategory) getIntent().getSerializableExtra(GlobalConstants.EVENT_OF_CATEGORY_WORD);
         this.currentEvent = eventOfCategory.getEvent();

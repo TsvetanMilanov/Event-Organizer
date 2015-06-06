@@ -54,9 +54,7 @@ public class EditEventActivity extends Activity {
 
         setContentView(R.layout.add_and_edit_event_activity_layout);
 
-        int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(this);
-
-        database = new DBHandler(this, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+        database = new DBHandler(this, DatabaseConstants.DATABASE_NAME, null);
 
         category = (Category) getIntent().getSerializableExtra(GlobalConstants.CATEGORY_WORD);
 

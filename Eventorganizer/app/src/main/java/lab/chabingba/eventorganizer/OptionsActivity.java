@@ -29,10 +29,8 @@ public class OptionsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.options_activity_layout);
-
-        int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(this);
-
-        database = new DBHandler(this, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+        
+        database = new DBHandler(this, DatabaseConstants.DATABASE_NAME, null);
 
         ListView listView = (ListView) findViewById(R.id.lvOptionsInOptions);
 

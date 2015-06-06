@@ -160,9 +160,7 @@ public final class GeneralHelpers {
 
         boolean autoCancel = preferences.getBoolean("cbpAutoCancelNotifications", true);
 
-        int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(context);
-
-        DBHandler database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+        DBHandler database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null);
 
         ArrayList<EventOfCategory> listOfEventsForToday = checkForEventForToday(database);
 
@@ -268,9 +266,7 @@ public final class GeneralHelpers {
     }
 
     public static void createAddNewEventTypeDialog(final Context context, final EventOfCategory eventOfCategory) {
-        int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(context);
-
-        final DBHandler database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+        final DBHandler database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null);
 
         LayoutInflater li = LayoutInflater.from(context);
         View promptsView = li.inflate(R.layout.add_event_type_dialog, null);
@@ -321,9 +317,7 @@ public final class GeneralHelpers {
     }
 
     public static void createAddNewEventTypeDialog(final Context context) {
-        int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(context);
-
-        final DBHandler database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+        final DBHandler database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null);
 
         LayoutInflater li = LayoutInflater.from(context);
         View promptsView = li.inflate(R.layout.add_event_type_dialog, null);
@@ -536,13 +530,7 @@ public final class GeneralHelpers {
     }
 
     public static void createMultiAlarms(Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-
-        long timeBeforeEvent = Long.valueOf(sharedPreferences.getString("timeBeforeEvent", "10800000"));
-
-        int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(context);
-
-        DBHandler database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+        DBHandler database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null);
 
         ArrayList<EventOfCategory> listOfEventsForToday = GeneralHelpers.checkForEventForToday(database);
 
@@ -557,28 +545,36 @@ public final class GeneralHelpers {
 
             int requestCode = i + 1;
 
-            Intent myIntent = new Intent(context, MultiNotificationsService.class);
-            Bundle bundle = new Bundle();
-
-            bundle.putSerializable(GlobalConstants.EVENT_OF_CATEGORY_WORD, currentEvent);
-            bundle.putInt(GlobalConstants.REQUEST_CODE_WORD, requestCode);
-
-            myIntent.putExtras(bundle);
-
-            PendingIntent pendingIntent = PendingIntent.getService(context, requestCode, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Calendar timeForNotification = currentEvent.getEvent().getDate();
-
-            long timeAsLong = timeForNotification.getTimeInMillis() - timeBeforeEvent;
-
-            if (timeAsLong < 0) {
-                timeAsLong = 1;
-            }
-
-            database.setHasNotificationToEvents(listOfEventsForToday);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, timeAsLong, pendingIntent);
-            Log.i(TAG, "Created MultiAlarm.");
+            GeneralHelpers.createAlarmForEvent(context, alarmManager, requestCode, database, listOfEventsForToday, currentEvent);
         }
+    }
+
+    public static void createAlarmForEvent(Context context, AlarmManager alarmManager, int requestCode, DBHandler database, ArrayList<EventOfCategory> listOfEventsForToday, EventOfCategory currentEvent) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        long timeBeforeEvent = Long.valueOf(sharedPreferences.getString("timeBeforeEvent", "10800000"));
+
+        Intent myIntent = new Intent(context, MultiNotificationsService.class);
+        Bundle bundle = new Bundle();
+
+        bundle.putSerializable(GlobalConstants.EVENT_OF_CATEGORY_WORD, currentEvent);
+        bundle.putInt(GlobalConstants.REQUEST_CODE_WORD, requestCode);
+
+        myIntent.putExtras(bundle);
+
+        PendingIntent pendingIntent = PendingIntent.getService(context, requestCode, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Calendar timeForNotification = currentEvent.getEvent().getDate();
+
+        long timeAsLong = timeForNotification.getTimeInMillis() - timeBeforeEvent;
+
+        if (timeAsLong < 0) {
+            timeAsLong = 1;
+        }
+
+        database.setHasNotificationToEvents(listOfEventsForToday);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, timeAsLong, pendingIntent);
+        Log.i(TAG, "Created MultiAlarm.");
     }
 
     public static void createNotification(Context context, EventOfCategory currentEvent, int requestCode) {
@@ -586,9 +582,7 @@ public final class GeneralHelpers {
 
         boolean autoCancel = preferences.getBoolean("cbpAutoCancelNotifications", true);
 
-        int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(context);
-
-        DBHandler database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+        DBHandler database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null);
 
         ArrayList<EventOfCategory> listOfEventsForToday = checkForEventForToday(database);
 
@@ -619,9 +613,7 @@ public final class GeneralHelpers {
     }
 
     public static void forceNotifications(Context context) {
-        int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(context);
-
-        DBHandler database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+        DBHandler database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null);
 
         ArrayList<EventOfCategory> listOfEventsForToday = GeneralHelpers.checkForEventForToday(database);
 
@@ -631,6 +623,28 @@ public final class GeneralHelpers {
             context.startActivity(intentForTodayEvents);
         } else {
             Toast.makeText(context, "No events for today.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public static void startNotificationServices(Context context, SharedPreferences sharedPreferences) {
+        boolean notificationsState = sharedPreferences.getBoolean("notificationsOnOff", true);
+
+        int notificationsType = Integer.valueOf(sharedPreferences.getString("notificationType", "0"));
+
+        if (notificationsState == true) {
+            if (notificationsType == 0) {
+                GeneralHelpers.createAlarmManager(context);
+            }
+
+            if (notificationsType == 1) {
+                GeneralHelpers.createMultiAlarms(context);
+            }
+
+            if (notificationsType == 2) {
+                GeneralHelpers.createAlarmManager(context);
+
+                GeneralHelpers.createMultiAlarms(context);
+            }
         }
     }
 }

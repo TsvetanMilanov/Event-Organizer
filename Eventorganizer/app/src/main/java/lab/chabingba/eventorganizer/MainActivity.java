@@ -46,16 +46,17 @@ public class MainActivity extends Activity {
 
         GeneralHelpers.firstAppRun(this);
 
-        int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(this);
-
-        database = new DBHandler(this, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+        database = new DBHandler(this, DatabaseConstants.DATABASE_NAME, null);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
         boolean autoCleanOldEvents = preferences.getBoolean("cbpAutoRemoveOldEvents", true);
 
         if (autoCleanOldEvents) {
             GeneralHelpers.removeOldEvents(database);
         }
+
+        GeneralHelpers.startNotificationServices(this, preferences);
 
         //region Create listViewForMenu
         ListView listViewForMenu = (ListView) this.findViewById(R.id.lvOptions);

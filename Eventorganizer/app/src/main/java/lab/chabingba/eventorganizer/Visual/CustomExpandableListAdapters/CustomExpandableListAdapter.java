@@ -35,8 +35,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         this.listOfEvents = listOfEvents;
         this.context = context;
         this.category = category;
-        int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(context);
-        this.database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+
+        this.database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null);
     }
 
     @Override
