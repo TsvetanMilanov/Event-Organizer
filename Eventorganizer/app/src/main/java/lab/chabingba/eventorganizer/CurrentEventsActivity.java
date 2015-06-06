@@ -54,7 +54,7 @@ public class CurrentEventsActivity extends ExpandableListActivity {
         tvTitleText.setText(category.getName());
 
         loadOldEvents = getIntent().getBooleanExtra(GlobalConstants.LOAD_OLD_EVENTS_TEXT, false);
-        boolean loadTodayEvents = getIntent().getBooleanExtra(GlobalConstants.LOAD_TODAYS_EVENTS_TEXT, false);
+        boolean loadTodayEvents = getIntent().getBooleanExtra(GlobalConstants.LOAD_TODAY_EVENTS_TEXT, false);
 
         listOfEventsForNotification = (ArrayList<EventOfCategory>) getIntent().getSerializableExtra(GlobalConstants.EVENTS_FOR_NOTIFICATION_TEXT);
 

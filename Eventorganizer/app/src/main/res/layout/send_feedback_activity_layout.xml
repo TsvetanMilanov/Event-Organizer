@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+    <TableRow
+        android:id="@+id/trSendFBHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableLayout
+            android:id="@+id/tlSendFB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ff008ad4"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp">
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center|center_horizontal"
+                android:text="Send Feedback"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#ffffff"
+                android:textSize="25sp" />
+        </TableLayout>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/trSendFBHeader"
+        android:paddingBottom="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="10dp">
+
+        <ScrollView
+            android:id="@+id/scrollView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true">
+
+                <TextView
+                    android:id="@+id/tvFBCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Feedback category:"
+                    android:textSize="20dp" />
+
+                <Spinner
+                    android:id="@+id/spinnerSelectFBCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvFBCategory"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|center|center_horizontal" />
+
+                <TextView
+                    android:id="@+id/tvFBContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/spinnerSelectFBCategory"
+                    android:layout_marginTop="20dp"
+                    android:text="Content:"
+                    android:textSize="20dp" />
+
+                <EditText
+                    android:id="@+id/etFBContent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/tvFBContent"
+                    android:layout_marginTop="5dp"
+                    android:ems="10"
+                    android:hint="Content..."
+                    android:inputType="textMultiLine"
+                    android:textColorHint="#cccccc" />
+
+                <Button
+                    android:id="@+id/buttonSendFB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="false"
+                    android:layout_below="@id/etFBContent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp"
+                    android:onClick="onSendFeedbackClicked"
+                    android:text="Send" />
+
+            </RelativeLayout>
+        </ScrollView>
+
+    </TableRow>
+
+</RelativeLayout>

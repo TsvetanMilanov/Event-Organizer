@@ -143,7 +143,7 @@ public final class GeneralHelpers {
         Bundle bundle = new Bundle();
         bundle.putSerializable(GlobalConstants.CATEGORY_WORD, category);
         bundle.putBoolean(GlobalConstants.LOAD_OLD_EVENTS_TEXT, loadOldEvents);
-        bundle.putBoolean(GlobalConstants.LOAD_TODAYS_EVENTS_TEXT, loadTodayEvents);
+        bundle.putBoolean(GlobalConstants.LOAD_TODAY_EVENTS_TEXT, loadTodayEvents);
         bundle.putSerializable(GlobalConstants.EVENTS_FOR_NOTIFICATION_TEXT, listOfEventsForNotification);
 
         result.putExtras(bundle);

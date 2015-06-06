@@ -72,21 +72,26 @@ public class MainActivity extends Activity {
 
                 switch (position) {
                     case 0:
+                        //Events for today
                         GeneralHelpers.forceNotifications(MainActivity.this);
                         break;
                     case 1:
+                        //Preferences
                         intent = new Intent(MainActivity.this, OptionsActivity.class);
                         startActivity(intent);
                         break;
                     case 2:
+                        //Force notifications
                         ArrayList<EventOfCategory> listOfEventsForTodayForForceNotification = GeneralHelpers.checkForEventForToday(database);
 
                         GeneralHelpers.createNotification(MainActivity.this, listOfEventsForTodayForForceNotification);
 
                         break;
                     case 3:
-                        // TODO: implement About menu
-                        Toast.makeText(MainActivity.this, "Under construction", Toast.LENGTH_SHORT).show();
+                        // Send Feedback
+                        Intent intentForFeedback = new Intent(MainActivity.this, SendFeedbackActivity.class);
+
+                        startActivity(intentForFeedback);
                         break;
                     case 4:
                         finish();

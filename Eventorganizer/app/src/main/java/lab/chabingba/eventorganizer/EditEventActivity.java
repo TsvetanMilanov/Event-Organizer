@@ -23,7 +23,7 @@ import lab.chabingba.eventorganizer.Database.MyEvent;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
-import lab.chabingba.eventorganizer.Visual.CustomSpinnerItem;
+import lab.chabingba.eventorganizer.Visual.CustomEventTypeSpinnerItem;
 
 /**
  * Created by Tsvetan on 2015-05-27.
@@ -65,7 +65,7 @@ public class EditEventActivity extends Activity {
 
         spinnerType = (Spinner) findViewById(R.id.spinner);
 
-        ArrayAdapter<String> arrayAdapter = new CustomSpinnerItem(EditEventActivity.this, this.listOfEventTypes);
+        ArrayAdapter<String> arrayAdapter = new CustomEventTypeSpinnerItem(EditEventActivity.this, this.listOfEventTypes);
 
         spinnerType.setAdapter(arrayAdapter);
 

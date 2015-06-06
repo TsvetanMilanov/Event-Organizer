@@ -1,5 +1,7 @@
 package lab.chabingba.eventorganizer.Helpers.Constants;
 
+import java.util.ArrayList;
+
 /**
  * Created by Tsvetan on 2015-05-25.
  */
@@ -21,7 +23,7 @@ public final class GlobalConstants {
 
     public static final String CATEGORY_WORD = "Category";
     public static final String LOAD_OLD_EVENTS_TEXT = "LoadOldEvents";
-    public static final String LOAD_TODAYS_EVENTS_TEXT = "LoadTodaysEvents";
+    public static final String LOAD_TODAY_EVENTS_TEXT = "LoadTodayEvents";
     public static final String EVENTS_FOR_NOTIFICATION_TEXT = "EventsForNotification";
     public static final String BASE_RETURN = "BaseReturn";
     public static final String REQUEST_CODE_WORD = "RequestCode";
@@ -31,6 +33,8 @@ public final class GlobalConstants {
     public static final String DIALOG_SAVE_WORD = "Save";
     public static final String DIALOG_DELETE_WORD = "Delete";
     public static final String EVENT_OF_CATEGORY_WORD = "EventOfCategory";
+    public static final String EMAIL_FOR_FEEDBACK = "tsvetan.milanov17@gmail.com";
+    public static final String EMAIL_SUBJECT = "Event-Organizer app";
 
     public static final String BOOT_RECEIVER_ACTION_NAME = ".Notifications.BootReceiver";
 
@@ -38,7 +42,14 @@ public final class GlobalConstants {
         OPEN, CLOSED, OPENING, CLOSING
     }
 
-    public static final String[] MENU_OPTIONS = {"Events for today", "Options", "Force notification", "About", "Exit"};
+    public static final String[] MENU_OPTIONS = {"Events for today", "Options", "Force notification", "Send Feedback", "Exit"};
+
+    public static final ArrayList<String> FEEDBACK_CATEGORIES = new ArrayList<String>() {{
+        add("Request");
+        add("Recommendation");
+        add("Bug");
+        add("Force close");
+    }};
 
     public static final String[] DEFAULT_EVENT_TYPES = {
             "Lecture",
