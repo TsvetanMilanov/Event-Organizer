@@ -71,15 +71,7 @@ public class MainActivity extends Activity {
 
                 switch (position) {
                     case 0:
-                        ArrayList<EventOfCategory> listOfEventsForToday = GeneralHelpers.checkForEventForToday(database);
-
-                        if (!ValidatorHelpers.isNullOrEmpty(listOfEventsForToday)) {
-                            Intent intentForTodayEvents = GeneralHelpers.createIntentForCurrentEventsActivity(MainActivity.this, listOfEventsForToday.get(0).getCategory(), false, listOfEventsForToday, true);
-
-                            startActivity(intentForTodayEvents);
-                        } else {
-                            Toast.makeText(MainActivity.this, "No events for today.", Toast.LENGTH_LONG).show();
-                        }
+                        GeneralHelpers.forceNotifications(MainActivity.this);
                         break;
                     case 1:
                         intent = new Intent(MainActivity.this, OptionsActivity.class);
@@ -92,7 +84,8 @@ public class MainActivity extends Activity {
 
                         break;
                     case 3:
-                        Toast.makeText(MainActivity.this, "About", Toast.LENGTH_SHORT).show();
+                        // TODO: implement About menu
+                        Toast.makeText(MainActivity.this, "Under construction", Toast.LENGTH_SHORT).show();
                         break;
                     case 4:
                         finish();

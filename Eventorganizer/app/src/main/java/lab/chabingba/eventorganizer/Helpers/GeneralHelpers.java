@@ -550,6 +550,11 @@ public final class GeneralHelpers {
 
         for (int i = 0; i < listOfEventsForToday.size(); i++) {
             EventOfCategory currentEvent = listOfEventsForToday.get(i);
+
+            if (currentEvent.getEvent().getHasNotification()) {
+                continue;
+            }
+
             int requestCode = i + 1;
 
             Intent myIntent = new Intent(context, MultiNotificationsService.class);
@@ -570,6 +575,7 @@ public final class GeneralHelpers {
                 timeAsLong = 1;
             }
 
+            database.setHasNotificationToEvents(listOfEventsForToday);
             alarmManager.set(AlarmManager.RTC_WAKEUP, timeAsLong, pendingIntent);
             Log.i(TAG, "Created MultiAlarm.");
         }
@@ -610,5 +616,21 @@ public final class GeneralHelpers {
         notificationManager.notify(0, notification);
 
         Log.i(TAG, "Notification created");
+    }
+
+    public static void forceNotifications(Context context) {
+        int currentDatabaseVersion = GeneralHelpers.getCurrentDatabaseVersion(context);
+
+        DBHandler database = new DBHandler(context, DatabaseConstants.DATABASE_NAME, null, currentDatabaseVersion);
+
+        ArrayList<EventOfCategory> listOfEventsForToday = GeneralHelpers.checkForEventForToday(database);
+
+        if (!ValidatorHelpers.isNullOrEmpty(listOfEventsForToday)) {
+            Intent intentForTodayEvents = GeneralHelpers.createIntentForCurrentEventsActivity(context, listOfEventsForToday.get(0).getCategory(), false, listOfEventsForToday, true);
+
+            context.startActivity(intentForTodayEvents);
+        } else {
+            Toast.makeText(context, "No events for today.", Toast.LENGTH_LONG).show();
+        }
     }
 }

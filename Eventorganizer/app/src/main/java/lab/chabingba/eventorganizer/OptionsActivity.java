@@ -17,7 +17,7 @@ import lab.chabingba.eventorganizer.Database.DBHandler;
 import lab.chabingba.eventorganizer.Helpers.Constants.DatabaseConstants;
 import lab.chabingba.eventorganizer.Helpers.Constants.GlobalConstants;
 import lab.chabingba.eventorganizer.Helpers.GeneralHelpers;
-import lab.chabingba.eventorganizer.Visual.CustomAdapterForOptions;
+import lab.chabingba.eventorganizer.Visual.CustomAdapterRows.CustomAdapterForOptions;
 
 /**
  * Created by Tsvetan on 2015-05-26.

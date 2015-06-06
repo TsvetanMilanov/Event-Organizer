@@ -22,14 +22,24 @@ public class BootReceiver extends BroadcastReceiver {
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-        int notificationsType = Integer.valueOf(sharedPreferences.getString("notificationType", "0"));
+        boolean notificationsState = sharedPreferences.getBoolean("notificationsOnOff", true);
 
-        if (notificationsType == 0 || notificationsType == 2) {
-            GeneralHelpers.createAlarmManager(context);
-        }
+        int notificationsType = sharedPreferences.getInt("notificationType", 0);
 
-        if (notificationsType == 1 || notificationsType == 2) {
-            GeneralHelpers.createMultiAlarms(context);
+        if (notificationsState == true) {
+            if (notificationsType == 0) {
+                GeneralHelpers.createAlarmManager(context);
+            }
+
+            if (notificationsType == 1) {
+                GeneralHelpers.createMultiAlarms(context);
+            }
+
+            if (notificationsType == 2) {
+                GeneralHelpers.createAlarmManager(context);
+
+                GeneralHelpers.createMultiAlarms(context);
+            }
         }
     }
 }

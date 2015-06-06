@@ -3,17 +3,26 @@
     <PreferenceCategory
         android:key="generalCategory"
         android:title="General">
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="cbpAutoRemoveOldEvents"
-            android:summary="Automatically clean old events on app start"
+            android:summaryOn="The old events will be moved to Old Events when the application is started"
+            android:summaryOff="The old events will NOT be moved to Old Events when the application is started"
             android:title="Auto remove old events" />
-
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="notificationsCategory"
         android:title="Notifications">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="notificationsOnOff"
+            android:summaryOff="Notifications are Off"
+            android:summaryOn="Notifications are On"
+            android:title="Notifications On/Off" />
+
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/notificationTypes"
@@ -21,16 +30,19 @@
             android:key="notificationType"
             android:summary="Select the type of notifications"
             android:title="Notification type" />
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="cbpAutoCancelNotifications"
-            android:summary="Auto-cancel notifications"
+            android:summaryOn="The notification will be cleaned from the status bar when clicked."
+            android:summaryOff="The notification will NOT be cleaned from the status bar when clicked."
             android:title="Auto - cancel notification" />
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="notificationsMultipleCategory"
         android:title="Notification before event">
+
         <ListPreference
             android:defaultValue="10800000"
             android:entries="@array/timeBeforeEvent"
@@ -43,6 +55,7 @@
     <PreferenceCategory
         android:key="notificationsOnceCategory"
         android:title="One notification">
+
         <ListPreference
             android:defaultValue="86400000"
             android:entries="@array/notificationIntervals"

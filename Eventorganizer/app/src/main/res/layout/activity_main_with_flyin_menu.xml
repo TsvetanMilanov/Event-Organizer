@@ -5,59 +5,62 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#ffe7e7e7"
         android:orientation="vertical"
-        android:background="#404040"
-        android:paddingTop="5dp"
         android:paddingLeft="5dp"
-        android:paddingRight="5dp">
+        android:paddingRight="5dp"
+        android:paddingTop="5dp">
 
 
         <ImageView
+            android:id="@+id/ivLogoInMenu"
             android:layout_width="fill_parent"
             android:layout_height="70dp"
-            android:id="@+id/ivLogoInMenu"
-            android:background="@drawable/logo_white"
-            android:layout_marginRight="30dp" />
+            android:layout_marginRight="30dp"
+            android:background="@drawable/logo_blue" />
 
         <View
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:background="#ff7a7a7a"></View>
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="#ffffff"
+            android:layout_marginTop="5dp" />
 
         <ListView
+            android:id="@+id/lvOptions"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/lvOptions"
+            android:footerDividersEnabled="true"
             android:headerDividersEnabled="true"
-            android:stackFromBottom="false"
-            android:footerDividersEnabled="true" />
+            android:stackFromBottom="false" />
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#ffffff"
         android:orientation="vertical"
-        android:paddingTop="0dp"
-        android:background="#ffffff">
+        android:paddingTop="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="5dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:paddingTop="0dp"
-            android:paddingBottom="5dp">
+            android:paddingTop="0dp">
 
             <TableRow
                 android:id="@+id/trMainHeaderRow"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:background="#ff008ad4"
-                android:paddingLeft="10dp"
-                android:paddingTop="5dp"
-                android:paddingRight="10dp"
                 android:paddingBottom="5dp"
-                android:layout_marginTop="5dp">
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -65,60 +68,60 @@
                     android:gravity="center">
 
                     <ImageButton
+                        android:id="@+id/imageButtonOptionsMain"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:background="@drawable/options_icon_white"
-                        android:id="@+id/imageButtonOptionsMain"
-                        android:onClick="onOptionsButtonClicked"
+                        android:layout_centerVertical="true"
                         android:layout_marginLeft="5dp"
-                        android:layout_centerVertical="true" />
+                        android:background="@drawable/options_icon_white"
+                        android:onClick="onOptionsButtonClicked" />
 
                     <ImageButton
+                        android:id="@+id/imageButtonAddCategory"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:id="@+id/imageButtonAddCategory"
-                        android:background="@drawable/add_button_white"
-                        android:onClick="onAddCategoryClicked"
                         android:layout_alignParentTop="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="23dp"
+                        android:layout_marginRight="20dp"
                         android:layout_toLeftOf="@+id/imageButtonRemoveCategory"
                         android:layout_toStartOf="@+id/imageButtonRemoveCategory"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginEnd="23dp"
-                        android:layout_centerVertical="true" />
+                        android:background="@drawable/add_button_white"
+                        android:onClick="onAddCategoryClicked" />
 
                     <ImageButton
+                        android:id="@+id/imageButtonRemoveCategory"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:id="@+id/imageButtonRemoveCategory"
-                        android:onClick="onDeleteCategoryClicked"
-                        android:background="@drawable/remove_button_white"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true" />
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/remove_button_white"
+                        android:onClick="onDeleteCategoryClicked" />
 
                     <TextView
+                        android:id="@+id/tvMainCategories"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Categories"
-                        android:id="@+id/tvMainCategories"
                         android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/imageButtonOptionsMain"
-                        android:textSize="18dp"
-                        android:gravity="center_horizontal"
                         android:layout_toLeftOf="@+id/imageButtonAddCategory"
+                        android:layout_toRightOf="@+id/imageButtonOptionsMain"
                         android:layout_toStartOf="@+id/imageButtonAddCategory"
-                        android:paddingRight="15dp" />
+                        android:gravity="center_horizontal"
+                        android:paddingRight="15dp"
+                        android:text="Categories"
+                        android:textSize="18dp" />
                 </RelativeLayout>
             </TableRow>
 
             <ListView
+                android:id="@+id/lvMainMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/lvMainMenu"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="60dp"
                 android:layout_marginLeft="30dp"
+                android:layout_marginTop="60dp"
                 android:headerDividersEnabled="true" />
 
         </RelativeLayout>
